@@ -61,7 +61,9 @@ Build-Depends: debhelper (>= 8),
  binutils-source,
  quilt
 Standards-Version: 3.9.2
-Homepage: http://wireless.kernel.org/en/users/Drivers/ar9170#open_firmware
+Homepage: http://wireless.kernel.org/en/users/Drivers/carl9170.fw
+Vcs-Svn: svn://svn.berlios.de/fullstory/firmware-carl9170/trunk
+Vcs-Browser: http://svn.berlios.de/wsvn/fullstory/firmware-carl9170/trunk/
 
 Package: firmware-carl9170
 Architecture: all
