@@ -1,0 +1,165 @@
+Format-Specification: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=174
+Upstream-Name: carl9170fw
+Upstream-Contact: Christian Lamparter <chunkeey@googlemail.com>
+Source: git://git.kernel.org/pub/scm/linux/kernel/git/chr/carl9170fw.git
+
+Files: *
+Copyright: 2000-2005, ZyDAS Technology Corporation
+           2007-2009, Atheros Communications, Inc.
+           2008-2009, Johannes Berg <johannes@sipsolutions.net>
+           2009-2011, Christian Lamparter <chunkeey@googlemail.com>
+License: GPL-2
+
+Files: carlfw/*
+Copyright: 2000-2005, ZyDAS Technology Corporation
+           2007-2009, Atheros Communications, Inc.
+           2008-2009, Johannes Berg <johannes@sipsolutions.net>
+           2009-2011, Christian Lamparter <chunkeey@googlemail.com>
+License: GPL-2+
+
+Files: carlfw/src/ashlsi3.S udivsi3_i4i-Os.S
+Copyright: 1994-2006, Free Software Foundation, Inc.
+License: GPL-2+
+
+Files: carlfw/src/memcpy.S carlfw/src/memset.S
+Copyright: 1999, Niibe Yutaka
+License: GPL-2
+
+Files: carlfw/src/printf.c
+Copyright: 2004, 2008, Kustaa Nyholm
+License: LGPL-2.1+
+
+Files: config/*
+Copyright: 2002-2005, Roman Zippel <zippel@linux-m68k.org>
+License: GPL-2
+
+Files: config/util.c
+Copyright: 2002-2005, Roman Zippel <zippel@linux-m68k.org>
+           2002-2005, Sam Ravnborg <sam@ravnborg.org>
+License: GPL-2
+
+Files: include/linux/ieee80211.h
+Copyright: 2001-2002, SSH Communications Security Corp and Jouni Malinen <jkmaline@cc.hut.fi>
+           2002-2003, Jouni Malinen <jkmaline@cc.hut.fi>
+           2005, Devicescape Software, Inc.
+           2006, Michael Wu <flamingice@sourmilk.net>
+License: GPL-2
+
+Files: include/shared/phy.h
+Copyright: 2008-2009, Atheros Communications, Inc.
+License: ISC
+
+Files: tools/*
+Copyright: 2009-2011, Christian Lamparter <chunkeey@googlemail.com>
+License: GPL-2+
+
+Files: tools/include/frame.h
+Copyright: 2009-2011, Christian Lamparter <chunkeey@googlemail.com>
+License: GPL-2
+
+Files: tools/include/list.h
+Copyright: 2003-2006, Thomas Graf <tgraf@suug.ch>
+License: LGPL-2.1
+
+Files: tools/src/*
+Copyright: 2009-2011, Christian Lamparter <chunkeey@googlemail.com>
+License: GPL-2
+
+Files: debian/*
+Copyright: 2010-2011, Stefan Lippers-Hollmann <s.l-h@gmx.de>
+License: GPL-2+
+
+Files: debian/rules
+Copyright: 2009, Jan Kiszka <jan.kiszka@web.de>
+           2010-2011, Stefan Lippers-Hollmann <s.l-h@gmx.de>
+License: GPL-2+
+
+License: GPL-2
+ This program is free software; you can redistribute it
+ and/or modify it under the terms of the GNU General Public
+ License as published by the Free Software Foundation; version
+ 2 of the License.
+ .
+ This program is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the implied
+ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ PURPOSE.  See the GNU General Public License for more
+ details.
+ .
+ You should have received a copy of the GNU General Public
+ License along with this package; if not, write to the Free
+ Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ Boston, MA  02110-1301 USA
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ `/usr/share/common-licenses/GPL-2'.
+
+License: GPL-2+
+ This program is free software; you can redistribute it
+ and/or modify it under the terms of the GNU General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later
+ version.
+ .
+ This program is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the implied
+ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ PURPOSE.  See the GNU General Public License for more
+ details.
+ .
+ You should have received a copy of the GNU General Public
+ License along with this package; if not, write to the Free
+ Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ Boston, MA  02110-1301 USA
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ `/usr/share/common-licenses/GPL-2'.
+
+License: LGPL-2.1
+ This package is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; version
+ 2.1 of the License.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU Lesser General
+ Public License can be found in "/usr/share/common-licenses/LGPL-2.1".
+
+License: LGPL-2.1+
+ This package is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU Lesser General
+ Public License can be found in "/usr/share/common-licenses/LGPL-2.1".
+
+License: ISC
+ Permission to use, copy, modify, and/or distribute this software for any
+ purpose with or without fee is hereby granted, provided that the above
+ copyright notice and this permission notice appear in all copies.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.

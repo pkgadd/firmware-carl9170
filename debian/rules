@@ -1,0 +1,86 @@
+#!/usr/bin/make -f
+
+# hardcode gcc version, we need to build-depend on a specific
+# gcc-$(GCC_VER)-source version anyways.
+GCC_VER=4.6
+
+# use parallel building for the toolchain, if allowed by buildd policies
+ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+  BUILD_JOBS := $(subst parallel=,,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+endif
+ifdef BUILD_JOBS
+  JOBS_ARG = -j$(BUILD_JOBS)
+endif
+
+%:
+	dh  $@
+
+override_dh_auto_configure:
+	cp --remove-destination debian/carl9170.config .config
+	./autogen.sh config
+	dh_auto_configure
+
+override_dh_auto_build:
+	# unpack pre-patched binutils
+	mkdir -p debian/toolchain/src/binutils
+	cd debian/toolchain/src/binutils/ && \
+		tar --strip 1 --xz -xf $$(dpkg -L binutils-source | grep '/usr/src/binutils/binutils-[0-9\.]*.tar.xz')
+	
+	# unpack and patch newlib
+	mkdir -p debian/toolchain/src/newlib
+	cd debian/toolchain/src/newlib/ && \
+		tar --strip 1 --lzma -xf $$(dpkg -L newlib-source | grep '/usr/src/newlib/newlib-[0-9\.]*.tar.lzma'); \
+		QUILT_PATCHES=/usr/src/newlib/patches quilt push -a
+	
+	# unpack and patch gcc
+	cp -r /usr/src/gcc-$(GCC_VER) debian/toolchain/src/gcc-temp
+	$(MAKE) -C debian/toolchain/src/gcc-temp -f debian/rules patch
+	mv debian/toolchain/src/gcc-temp/src debian/toolchain/src/gcc
+	ln -fs ../newlib/newlib debian/toolchain/src/gcc/
+	ln -fs ../newlib/libgloss debian/toolchain/src/gcc/
+	
+	# build binutils
+	mkdir -p debian/toolchain/build/binutils
+	cd debian/toolchain/build/binutils; \
+		../../src/binutils/configure --target=sh-elf --prefix=$(CURDIR)/debian/toolchain/inst; \
+		$(MAKE) $(JOBS_ARG); \
+		$(MAKE) install
+	
+	# build gcc
+	mkdir -p debian/toolchain/build/gcc
+	cd debian/toolchain/build/gcc; \
+		../../src/gcc/configure --target=sh-elf --prefix=$(CURDIR)/debian/toolchain/inst -enable-languages=c --without-pkgversion --with-newlib; \
+		$(MAKE) $(JOBS_ARG); \
+		$(MAKE) install
+	
+	# hook into upstream toolchain
+	rm -rf toolchain/inst
+	ln -fs ../debian/toolchain/inst toolchain/
+	
+	# compile the firmware using the newly built cross toolchain
+	dh_auto_build
+	cp carlfw/carl9170.fw $$(sed -n 's/^CONFIG_CARL9170FW_RELEASE_VERSION=\(.*\)/carlfw\/carl9170-\1.fw/p' .config)
+
+override_dh_install:
+	dh_install $$(sed -n 's/^CONFIG_CARL9170FW_RELEASE_VERSION=\(.*\)/carlfw\/carl9170-\1.fw/p' .config) lib/firmware/
+
+override_dh_clean:
+	rm -rf	debian/toolchain \
+		toolchain/inst \
+		carlfw/carl9170*.fw \
+		include/generated \
+		.config* \
+		CMakeCache.txt \
+		CMakeFiles \
+		Makefile \
+		carlfw/CMakeFiles \
+		carlfw/Makefile \
+		carlfw/cmake_install.cmake \
+		cmake_install.cmake \
+		config.cmake \
+		config/CMakeCache.txt \
+		config/CMakeFiles \
+		config/Makefile \
+		config/cmake_install.cmake \
+		config/zconf.tab.h
+	dh_clean

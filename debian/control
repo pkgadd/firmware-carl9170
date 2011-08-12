@@ -1,0 +1,74 @@
+Source: firmware-carl9170
+Section: kernel
+Priority: optional
+Maintainer: Stefan Lippers-Hollmann <s.l-h@gmx.de>
+Build-Depends: debhelper (>= 8),
+ autoconf (>= 2.64),
+ autogen,
+ bison,
+ cmake,
+ flex,
+ gettext,
+ texinfo (>= 4.3),
+ expect-tcl8.3 (>= 5.32.2) [hppa],
+ dejagnu (>= 1.4.2-1.1),
+ file,
+ xz-utils,
+ lsb-release,
+ zlib1g-dev,
+ gcc-multilib [amd64 i386 mips mipsel powerpc ppc64 s390 sparc kfreebsd-amd64],
+ libc6.1-dev (>= 2.5) [alpha ia64] | libc0.3-dev (>= 2.5) [hurd-i386] | libc0.1-dev (>= 2.5) [kfreebsd-i386 kfreebsd-amd64] | libc6-dev (>= 2.5),
+ libc6-dev-amd64 [i386],
+ libc6-dev-sparc64 [sparc],
+ libc6-dev-s390x [s390],
+ libc6-dev-i386 [amd64],
+ libc6-dev-powerpc [ppc64],
+ libc6-dev-ppc64 [powerpc],
+ libc0.1-dev-i386 [kfreebsd-amd64],
+ lib32gcc1 [amd64 ppc64 kfreebsd-amd64],
+ lib64gcc1 [i386 powerpc sparc s390],
+ libc6-dev-mips64 [mips mipsel],
+ libc6-dev-mipsn32 [mips mipsel],
+ m4, libtool,
+ automake,
+ libunwind7-dev (>= 0.98.5-6) [ia64],
+ libatomic-ops-dev [ia64],
+ zlib1g-dev,
+ gawk,
+ lzma,
+ patchutils,
+ binutils (>= 2.20) | binutils-multiarch (>= 2.20),
+ binutils-hppa64 (>= 2.20) [hppa],
+ gperf (>= 3.0.1),
+ bison (>= 1:2.3),
+ libmpfr-dev (>= 2.3.0),
+ locales [!m68k !knetbsd-i386 !knetbsd-alpha],
+ procps,
+ sharutils,
+ binutils-spu (>= 2.20) [powerpc ppc64],
+ newlib-spu (>= 1.16.0) [powerpc ppc64],
+ libcloog-ppl-dev (>= 0.15),
+ dejagnu [!m68k !hurd-i386 !hurd-alpha],
+ realpath (>= 1.9.12),
+ chrpath,
+ make (>= 3.81),
+ libgmp-dev,
+ libmpfr-dev,
+ libmpc-dev,
+ lsb-release,
+ gcc-4.6-source,
+ newlib-source,
+ binutils-source,
+ quilt
+Standards-Version: 3.9.2
+Homepage: http://wireless.kernel.org/en/users/Drivers/ar9170#open_firmware
+
+Package: firmware-carl9170
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Binary firmware for Atheros AR9170
+ This package contains the binary firmware for Atheros AR9170 802.11n USB WLAN
+ devices, used by carl9170 community driver.
+ .
+ Contents:
+  * Atheros AR9170 firmware for carl9170 (carl9170-1.fw)

@@ -1,0 +1,327 @@
+From d57b31e45dca1087cefd56876a0a8064efe4e29c Mon Sep 17 00:00:00 2001
+From: Christian Lamparter <chunkeey@googlemail.com>
+Date: Fri, 1 Jul 2011 01:18:34 +0200
+Subject: [PATCH 01/10] carl9170 firmware: report device tallies
+
+ - channel active counter
+ - main channel clear counter
+ - ext channel clear counter
+
+ - rx total counter
+ - rx overrun counter
+
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+---
+ carlfw/include/carl9170.h |   13 +++++++---
+ carlfw/include/rf.h       |    2 +
+ carlfw/src/cmd.c          |    7 +++++
+ carlfw/src/fw.c           |    5 ++-
+ carlfw/src/main.c         |    9 +++++++
+ carlfw/src/rf.c           |   59 +++++++++++++++++++++++++++++++++++----------
+ carlfw/src/wlan.c         |    6 +++-
+ include/shared/fwcmd.h    |   10 +++++++
+ include/shared/fwdesc.h   |    3 ++
+ tools/src/fwinfo.c        |    1 +
+ 10 files changed, 94 insertions(+), 21 deletions(-)
+
+--- a/carlfw/include/carl9170.h
++++ b/carlfw/include/carl9170.h
+@@ -69,6 +69,11 @@ enum carl9170_suspend_mode {
+ 	CARL9170_AWAKE_HOST,
+ };
+ 
++enum carl9170_phy_state {
++	CARL9170_PHY_OFF		= 0,
++	CARL9170_PHY_ON
++};
++
+ typedef void (*fw_desc_callback_t)(void *, const bool);
+ 
+ /*
+@@ -110,10 +115,6 @@ struct firmware_context_struct {
+ 		/* rx filter */
+ 		unsigned int rx_filter;
+ 
+-		/* rx statistics */
+-		unsigned int rx_total;
+-		unsigned int rx_overruns;
+-
+ 		/* tx sequence control counters */
+ 		unsigned int sequence[CARL9170_INTF_NUM];
+ 
+@@ -196,10 +197,14 @@ struct firmware_context_struct {
+ 		unsigned int frequency;
+ 		unsigned int ht_settings;
+ 
++		enum carl9170_phy_state state;
+ 		struct carl9170_psm psm;
+ #endif /* CONFIG_CARL9170FW_RADIO_FUNCTIONS */
+ 	} phy;
+ 
++	unsigned int tally_clock;
++	struct carl9170_tally_rsp tally;
++
+ #ifdef CONFIG_CARL9170FW_GPIO_INTERRUPT
+ 	struct carl9170_gpio cached_gpio_state;
+ #endif /*CONFIG_CARL9170FW_GPIO_INTERRUPT */
+--- a/carlfw/include/rf.h
++++ b/carlfw/include/rf.h
+@@ -28,6 +28,8 @@
+ 
+ #include "config.h"
+ 
++void tally_update(void);
++
+ #ifdef CONFIG_CARL9170FW_RADIO_FUNCTIONS
+ void rf_notify_set_channel(void);
+ void rf_cmd(const struct carl9170_cmd *cmd, struct carl9170_rsp *resp);
+--- a/carlfw/src/cmd.c
++++ b/carlfw/src/cmd.c
+@@ -92,6 +92,13 @@ void handle_cmd(struct carl9170_rsp *res
+ 		break;
+ #endif /* CONFIG_CARL9170FW_WOL */
+ 
++	case CARL9170_CMD_TALLY:
++		resp->hdr.len = sizeof(struct carl9170_tally_rsp);
++		memcpy(&resp->tally, &fw.tally, sizeof(struct carl9170_tally_rsp));
++		tally_update();
++		memset(&fw.tally, 0, sizeof(struct carl9170_tally_rsp));
++		break;
++
+ #ifdef CONFIG_CARL9170FW_CAB_QUEUE
+ 	case CARL9170_CMD_BCN_CTRL:
+ 		resp->hdr.len = 0;
+--- a/carlfw/src/fw.c
++++ b/carlfw/src/fw.c
+@@ -37,6 +37,7 @@ const struct carl9170_firmware_descripto
+ 					BIT(CARL9170FW_USB_RESP_EP2) |
+ 					BIT(CARL9170FW_HANDLE_BACK_REQ) |
+ 					BIT(CARL9170FW_RX_FILTER) |
++					BIT(CARL9170FW_HW_COUNTERS) |
+ #ifdef CONFIG_CARL9170FW_USB_INIT_FIRMWARE
+ 					BIT(CARL9170FW_USB_INIT_FIRMWARE) |
+ # ifdef CONFIG_CARL9170FW_USB_UP_STREAM
+@@ -103,8 +104,8 @@ const struct carl9170_firmware_descripto
+ 	FILL(dbg, DBG,
+ 	     .bogoclock_addr = cpu_to_le32(0),
+ 	     .counter_addr = cpu_to_le32(&fw.counter),
+-	     .rx_total_addr = cpu_to_le32(&fw.wlan.rx_total),
+-	     .rx_overrun_addr = cpu_to_le32(&fw.wlan.rx_overruns),
++	     .rx_total_addr = cpu_to_le32(0),
++	     .rx_overrun_addr = cpu_to_le32(0),
+ 	     .rx_filter = cpu_to_le32(&fw.wlan.rx_filter),
+ 	),
+ 
+--- a/carlfw/src/main.c
++++ b/carlfw/src/main.c
+@@ -29,6 +29,7 @@
+ #include "printf.h"
+ #include "gpio.h"
+ #include "wl.h"
++#include "rf.h"
+ #include "usb.h"
+ 
+ #define AR9170_WATCH_DOG_TIMER		   0x100
+@@ -52,10 +53,14 @@ void clock_set(enum cpu_clock_t clock_,
+ 	 * This setting does more than just mess with the CPU Clock.
+ 	 * So watch out, if you need _stable_ timer interrupts.
+ 	 */
++#ifdef CONFIG_CARL9170FW_RADIO_FUNCTIONS
+         if (fw.phy.frequency < 3000000)
+ 		set(AR9170_PWR_REG_PLL_ADDAC, 0x5163);
+         else
+                 set(AR9170_PWR_REG_PLL_ADDAC, 0x5143);
++#else
++	set(AR9170_PWR_REG_PLL_ADDAC, 0x5163);
++#endif /* CONFIG_CARL9170FW_RADIO_FUNCTIONS */
+ 
+ 	fw.ticks_per_usec = GET_VAL(AR9170_PWR_PLL_ADDAC_DIV,
+ 		get(AR9170_PWR_REG_PLL_ADDAC));
+@@ -131,6 +136,10 @@ static void timer0_isr(void)
+ 	gpio_timer();
+ #endif /* CONFIG_CARL9170FW_GPIO_INTERRUPT */
+ 
++#ifdef CONFIG_CARL9170FW_RADIO_FUNCTIONS
++	tally_update();
++#endif /* CONFIG_CARL9170FW_RADIO_FUNCTIONS */
++
+ #ifdef CONFIG_CARL9170FW_DEBUG_LED_HEARTBEAT
+ 	set(AR9170_GPIO_REG_PORT_DATA, get(AR9170_GPIO_REG_PORT_DATA) ^ 1);
+ #endif /* CONFIG_CARL9170FW_DEBUG_LED_HEARTBEAT */
+--- a/carlfw/src/rf.c
++++ b/carlfw/src/rf.c
+@@ -29,16 +29,33 @@
+ #include "rf.h"
+ #include "shared/phy.h"
+ 
+-#ifdef CONFIG_CARL9170FW_RADIO_FUNCTIONS
+-static void set_channel_start(void)
++void tally_update(void)
+ {
+-	/* Manipulate CCA threshold to stop transmission */
+-	set(AR9170_PHY_REG_CCA_THRESHOLD, 0x300);
+-	/* Enable Virtual CCA */
+-	orl(AR9170_MAC_REG_QOS_PRIORITY_VIRTUAL_CCA,
+-	    AR9170_MAC_VIRTUAL_CCA_ALL);
++	unsigned int time;
++
++#ifdef CONFIG_CARL9170FW_RADIO_FUNCTIONS
++	unsigned int main_not_free, ext_not_free;
++
++	main_not_free = get(AR9170_MAC_REG_CHANNEL_BUSY);
++	ext_not_free = get(AR9170_MAC_REG_EXT_BUSY);
++	time = get_clock_counter();
++
++	if (fw.phy.state == CARL9170_PHY_ON) {
++		unsigned int us_delta = (time - fw.tally_clock) / max(fw.ticks_per_usec, 40u);
++
++		fw.tally.active += us_delta;
++		fw.tally.main_free += main_not_free;
++		fw.tally.ext_free += ext_not_free;
++	}
++#else
++	time = get_clock_counter();
++
++#endif /* CONFIG_CARL9170FW_RADIO_FUNCTIONS */
++
++	fw.tally_clock = time;
+ }
+ 
++#ifdef CONFIG_CARL9170FW_RADIO_FUNCTIONS
+ static void set_channel_end(void)
+ {
+ 	/* Manipulate CCA threshold to resume transmission */
+@@ -46,11 +63,28 @@ static void set_channel_end(void)
+ 	/* Disable Virtual CCA */
+ 	andl(AR9170_MAC_REG_QOS_PRIORITY_VIRTUAL_CCA,
+ 	     ~AR9170_MAC_VIRTUAL_CCA_ALL);
++
++	/* clear statistics */
++	tally_update();
++
++	fw.phy.state = CARL9170_PHY_ON;
+ }
+ 
+ void rf_notify_set_channel(void)
+ {
+-	set_channel_start();
++	tally_update();
++
++	/* Manipulate CCA threshold to stop transmission */
++	set(AR9170_PHY_REG_CCA_THRESHOLD, 0x300);
++	/* Enable Virtual CCA */
++	orl(AR9170_MAC_REG_QOS_PRIORITY_VIRTUAL_CCA,
++	    AR9170_MAC_VIRTUAL_CCA_ALL);
++
++	/* reset CCA stats */
++	fw.tally.active = 0;
++	fw.tally.main_free = 0;
++	fw.tally.ext_free = 0;
++	fw.phy.state = CARL9170_PHY_OFF;
+ }
+ 
+ /*
+@@ -242,7 +276,8 @@ void rf_psm(void)
+ 		/* Synthesizer off + RX off */
+ 		bank3 = 0x00400018;
+ 
+-		clock_set(AHB_20_22MHZ, false);
++		tally_update();
++		fw.phy.state = CARL9170_PHY_OFF;
+ 	} else {
+ 		/* advance to the next PSM step */
+ 		fw.phy.psm.state--;
+@@ -259,10 +294,8 @@ void rf_psm(void)
+ 			/* Synthesizer on + RX on */
+ 			bank3 = 0x01420098;
+ 
+-			if ((fw.phy.ht_settings & EIGHTY_FLAG) == EIGHTY_FLAG)
+-				clock_set(AHB_80_88MHZ, true);
+-			else
+-				clock_set(AHB_40_44MHZ, true);
++			tally_update();
++			fw.phy.state = CARL9170_PHY_ON;
+ 		} else {
+ 			return ;
+ 		}
+--- a/carlfw/src/wlan.c
++++ b/carlfw/src/wlan.c
+@@ -644,8 +644,8 @@ static void wlan_check_rx_overrun(void)
+ {
+ 	uint32_t overruns, total;
+ 
+-	fw.wlan.rx_total += total = get(AR9170_MAC_REG_RX_TOTAL);
+-	fw.wlan.rx_overruns += overruns = get(AR9170_MAC_REG_RX_OVERRUN);
++	fw.tally.rx_total += total = get(AR9170_MAC_REG_RX_TOTAL);
++	fw.tally.rx_overrun += overruns = get(AR9170_MAC_REG_RX_OVERRUN);
+ 	if (unlikely(overruns)) {
+ 		if (overruns == total) {
+ 			DBG("RX Overrun");
+@@ -1120,10 +1120,12 @@ static void handle_pretbtt(void)
+ 	fw.wlan.cab_flush_time = get_clock_counter();
+ #endif /* CONFIG_CARL9170FW_CAB_QUEUE */
+ 
++#ifdef CONFIG_CARL9170FW_RADIO_FUNCTIONS
+ 	rf_psm();
+ 
+ 	send_cmd_to_host(4, CARL9170_RSP_PRETBTT, 0x00,
+ 			 (uint8_t *) &fw.phy.psm.state);
++#endif /* CONFIG_CARL9170FW_RADIO_FUNCTIONS */
+ }
+ 
+ static void handle_atim(void)
+--- a/include/shared/fwcmd.h
++++ b/include/shared/fwcmd.h
+@@ -55,6 +55,7 @@ enum carl9170_cmd_oids {
+ 	CARL9170_CMD_READ_TSF		= 0x06,
+ 	CARL9170_CMD_RX_FILTER		= 0x07,
+ 	CARL9170_CMD_WOL		= 0x08,
++	CARL9170_CMD_TALLY		= 0x09,
+ 
+ 	/* CAM */
+ 	CARL9170_CMD_EKEY		= 0x10,
+@@ -286,6 +287,14 @@ struct carl9170_tsf_rsp {
+ } __packed;
+ #define CARL9170_TSF_RSP_SIZE		8
+ 
++struct carl9170_tally_rsp {
++	__le32 active;
++	__le32 main_free;
++	__le32 ext_free;
++	__le32 rx_total;
++	__le32 rx_overrun;
++} __packed;
++
+ struct carl9170_rsp {
+ 	struct carl9170_cmd_head hdr;
+ 
+@@ -300,6 +309,7 @@ struct carl9170_rsp {
+ 		struct carl9170_gpio		gpio;
+ 		struct carl9170_tsf_rsp		tsf;
+ 		struct carl9170_psm		psm;
++		struct carl9170_tally_rsp	tally;
+ 		u8 data[CARL9170_MAX_CMD_PAYLOAD_LEN];
+ 	} __packed;
+ } __packed __aligned(4);
+--- a/include/shared/fwdesc.h
++++ b/include/shared/fwdesc.h
+@@ -75,6 +75,9 @@ enum carl9170fw_feature_list {
+ 	/* Firmware supports PSM in the 5GHZ Band */
+ 	CARL9170FW_FIXED_5GHZ_PSM,
+ 
++	/* HW (ANI, CCA, MIB) tally counters */
++	CARL9170FW_HW_COUNTERS,
++
+ 	/* KEEP LAST */
+ 	__CARL9170FW_FEATURE_NUM
+ };
+--- a/tools/src/fwinfo.c
++++ b/tools/src/fwinfo.c
+@@ -67,6 +67,7 @@ static const struct feature_list known_o
+ 	CHECK_FOR_FEATURE(CARL9170FW_RX_FILTER),
+ 	CHECK_FOR_FEATURE(CARL9170FW_WOL),
+ 	CHECK_FOR_FEATURE(CARL9170FW_FIXED_5GHZ_PSM),
++	CHECK_FOR_FEATURE(CARL9170FW_HW_COUNTERS),
+ };
+ 
+ static void check_feature_list(const struct carl9170fw_desc_head *head,

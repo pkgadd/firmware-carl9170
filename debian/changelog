@@ -1,0 +1,5 @@
+firmware-carl9170 (1.9.4-0~c0.aptosid.1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 12 Aug 2011 19:57:48 +0200

@@ -1,0 +1,10 @@
+0001-carl9170-firmware-report-device-tallies.patch
+0002-carl9170-firmware-drop-timer1.patch
+0003-carl9170-firmware-improve-site-survey-data.patch
+0004-carl9170-firmware-fix-use-of-uninitialized-value.patch
+0005-carl9170-firmware-shared-register-file-update.patch
+0006-carl9170-firmware-correct-use-of-memset.patch
+0007-carl9170-firmware-add-BCN_HT1-and-BCN_HT2-definition.patch
+0008-carl9170-firmware-install-firmware-without-execute-p.patch
+0009-cfg80211-don-t-drop-p2p-probe-responses.patch
+0010-wireless-unify-QoS-control-field-definitions.patch

@@ -1,0 +1,21 @@
+From 904914f47c3b6974622cba176c6e9fb76b5f06e5 Mon Sep 17 00:00:00 2001
+From: Christian Lamparter <chunkeey@googlemail.com>
+Date: Sun, 10 Jul 2011 18:45:59 +0200
+Subject: [PATCH 04/10] carl9170 firmware: fix use of uninitialized value
+
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+---
+ carlfw/src/cmd.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+--- a/carlfw/src/cmd.c
++++ b/carlfw/src/cmd.c
+@@ -111,7 +111,7 @@ void handle_cmd(struct carl9170_rsp *res
+ 			set(AR9170_MAC_REG_BCN_CTRL, AR9170_BCN_CTRL_READY);
+ 		} else {
+ 			wlan_cab_flush_queue(cmd->bcn_ctrl.vif_id);
+-			fw.wlan.cab_flush_trigger[i] = CARL9170_CAB_TRIGGER_EMPTY;
++			fw.wlan.cab_flush_trigger[cmd->bcn_ctrl.vif_id] = CARL9170_CAB_TRIGGER_EMPTY;
+ 		}
+ 		break;
+ #endif /* CONFIG_CARL9170FW_CAB_QUEUE */

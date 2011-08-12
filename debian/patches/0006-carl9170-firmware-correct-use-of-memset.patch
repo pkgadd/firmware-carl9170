@@ -1,0 +1,30 @@
+From 5a79392acf19327b34c5c9ff70208a58c07508c1 Mon Sep 17 00:00:00 2001
+From: Ignacy Gawedzki <i@lri.fr>
+Date: Thu, 14 Jul 2011 15:03:11 +0200
+Subject: [PATCH 06/10] carl9170 firmware: correct use of memset
+
+I noticed something that may be a bug in wlan.c, in
+wlan_wol_connection_monitor():
+
+	memset(nullf, 0, sizeof(nullf));
+
+Should be:
+
+	memset(nullf, 0, sizeof(*nullf));
+
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+---
+ carlfw/src/wlan.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+--- a/carlfw/src/wlan.c
++++ b/carlfw/src/wlan.c
+@@ -756,7 +756,7 @@ static void wlan_wol_connection_monitor(
+ 	if (!fw.wlan.fw_desc_available)
+ 		return;
+ 
+-	memset(nullf, 0, sizeof(nullf));
++	memset(nullf, 0, sizeof(*nullf));
+ 
+ 	nullf->s.len = sizeof(struct carl9170_tx_superdesc) +
+ 		     sizeof(struct ar9170_tx_hwdesc) +
