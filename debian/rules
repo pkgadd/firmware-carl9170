@@ -16,7 +16,8 @@ endif
 	dh  $@
 
 override_dh_auto_configure:
-	cp --remove-destination debian/carl9170.config .config
+	# stick to the default config
+	#cp --remove-destination debian/carl9170.config .config
 	./autogen.sh config
 	dh_auto_configure
 
