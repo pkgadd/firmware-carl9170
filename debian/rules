@@ -18,7 +18,7 @@ endif
 override_dh_auto_configure:
 	# stick to the default config
 	#cp --remove-destination debian/carl9170.config .config
-	./autogen.sh config
+	./autogen.sh config </dev/null
 	dh_auto_configure
 
 override_dh_auto_build:
@@ -31,7 +31,7 @@ override_dh_auto_build:
 	mkdir -p debian/toolchain/src/newlib
 	cd debian/toolchain/src/newlib/ && \
 		tar --strip 1 --lzma -xf $$(dpkg -L newlib-source | grep '/usr/src/newlib/newlib-[0-9\.]*.tar.lzma'); \
-		QUILT_PATCHES=/usr/src/newlib/patches quilt push -a
+		QUILT_PATCHES=/usr/src/newlib/patches quilt --quiltrc /dev/null push -a
 	
 	# unpack and patch gcc
 	cp -r /usr/src/gcc-$(GCC_VER) debian/toolchain/src/gcc-temp
