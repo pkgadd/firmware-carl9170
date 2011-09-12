@@ -22,6 +22,9 @@ override_dh_auto_configure:
 	dh_auto_configure
 
 override_dh_auto_build:
+	# toolchain build procedures loosely derived from upstream's
+	# toolchain/Makefile, provided by Jan Kiszka <jan.kiszka@web.de>
+	
 	# unpack pre-patched binutils
 	mkdir -p debian/toolchain/src/binutils
 	cd debian/toolchain/src/binutils/ && \
