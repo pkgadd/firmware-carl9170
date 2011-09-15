@@ -1,4 +1,4 @@
-Format-Specification: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=174
+Format: http://anonscm.debian.org/viewvc/dep/web/deps/dep5.mdwn?revision=174&view=co
 Upstream-Name: carl9170fw
 Upstream-Contact: Christian Lamparter <chunkeey@googlemail.com>
 Source: git://git.kernel.org/pub/scm/linux/kernel/git/chr/carl9170fw.git
