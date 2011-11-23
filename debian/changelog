@@ -1,13 +1,27 @@
-firmware-carl9170 (1.9.4-0~c0.aptosid.2) UNRELEASED; urgency=low
+firmware-carl9170 (1.9.4-0~c0.aptosid.2) unstable; urgency=low
 
-  * NOT RELEASED YET
   * use reset local quiltrc.
   * close stdin, in order to create the default config non-interactively.
   * remove duplicated build-depends (lsb-release).
   * use Format instead of Format-Specification in debian/copyright and fix URL
     to use alioth's new anonscm location.
+  * import latest upstream commits:
+    - carl9170 firmware: report device tallies
+    - carl9170 firmware: drop timer1
+    - carl9170 firmware: improve site survey data
+    - carl9170 firmware: fix use of uninitialized value
+    - carl9170 firmware: shared register file update
+    - carl9170 firmware: correct use of memset
+    - carl9170 firmware: add BCN_HT1 and BCN_HT2 definitions
+    - carl9170 firmware: install firmware without execute permissions
+    - cfg80211: don't drop p2p probe responses
+    - wireless: unify QoS control field definitions
+    - ieee80211: add few wmm tspec values
+    - carl9170 firmware: checkpatch/style fixes
+    - carl9170 firmware: add missing out-of-bound check in WoWLAN code
+    - config: import latest kconfig
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 16 Sep 2011 00:42:23 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 23 Nov 2011 18:48:31 +0100
 
 firmware-carl9170 (1.9.4-0~c0.aptosid.1) unstable; urgency=low
 

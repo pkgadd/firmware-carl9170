@@ -1,7 +1,7 @@
 From 67460e54bedffbc62589ab4d5742e85091107b87 Mon Sep 17 00:00:00 2001
 From: Pavel Roskin <proski@gnu.org>
 Date: Fri, 15 Jul 2011 23:00:49 +0000
-Subject: [PATCH 08/10] carl9170 firmware: install firmware without execute
+Subject: [PATCH 08/14] carl9170 firmware: install firmware without execute
  permissions
 
 Signed-off-by: Pavel Roskin <proski@gnu.org>

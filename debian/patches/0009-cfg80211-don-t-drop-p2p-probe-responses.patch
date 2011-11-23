@@ -1,7 +1,7 @@
 From eb8711c9917fc843fa675cc6fb0522cf71422550 Mon Sep 17 00:00:00 2001
 From: Eliad Peller <eliad@wizery.com>
 Date: Sun, 29 May 2011 12:53:20 +0000
-Subject: [PATCH 09/10] cfg80211: don't drop p2p probe responses
+Subject: [PATCH 09/14] cfg80211: don't drop p2p probe responses
 
 Commit 0a35d36 ("cfg80211: Use capability info to detect mesh beacons")
 assumed that probe response with both ESS and IBSS bits cleared

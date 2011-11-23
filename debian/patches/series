@@ -8,3 +8,7 @@
 0008-carl9170-firmware-install-firmware-without-execute-p.patch
 0009-cfg80211-don-t-drop-p2p-probe-responses.patch
 0010-wireless-unify-QoS-control-field-definitions.patch
+0011-ieee80211-add-few-wmm-tspec-values.patch
+0012-carl9170-firmware-checkpatch-style-fixes.patch
+0013-carl9170-firmware-add-missing-out-of-bound-check-in-.patch
+0014-config-import-latest-kconfig.patch

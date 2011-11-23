@@ -1,7 +1,7 @@
 From 1b6a3060adfff3171b8e605c7fea82f04cf7c768 Mon Sep 17 00:00:00 2001
 From: Christian Lamparter <chunkeey@googlemail.com>
 Date: Fri, 1 Jul 2011 23:31:26 +0200
-Subject: [PATCH 03/10] carl9170 firmware: improve site survey data
+Subject: [PATCH 03/14] carl9170 firmware: improve site survey data
 
 Luis' automatic channel selection needs tx_time in
 order to work. Trouble is, the documentation does

@@ -1,7 +1,7 @@
 From cebfbec6d9cb2e472319eac39a5ad7169e82a30d Mon Sep 17 00:00:00 2001
 From: Johannes Berg <johannes.berg@intel.com>
 Date: Wed, 22 Jun 2011 08:06:59 +0000
-Subject: [PATCH 10/10] wireless: unify QoS control field definitions
+Subject: [PATCH 10/14] wireless: unify QoS control field definitions
 
 Move all that mac80211 has into the generic
 ieee80211.h header file and use them. At the

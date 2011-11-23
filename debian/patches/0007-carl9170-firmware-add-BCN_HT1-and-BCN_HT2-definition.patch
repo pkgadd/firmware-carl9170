@@ -1,7 +1,7 @@
 From 7cfeed4f21fc33a86ca520e2fbf584ee219475e8 Mon Sep 17 00:00:00 2001
 From: Christian Lamparter <chunkeey@googlemail.com>
 Date: Fri, 15 Jul 2011 16:33:39 +0200
-Subject: [PATCH 07/10] carl9170 firmware: add BCN_HT1 and BCN_HT2 definitions
+Subject: [PATCH 07/14] carl9170 firmware: add BCN_HT1 and BCN_HT2 definitions
 
 Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
 ---

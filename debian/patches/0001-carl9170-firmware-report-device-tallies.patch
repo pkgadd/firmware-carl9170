@@ -1,7 +1,7 @@
 From d57b31e45dca1087cefd56876a0a8064efe4e29c Mon Sep 17 00:00:00 2001
 From: Christian Lamparter <chunkeey@googlemail.com>
 Date: Fri, 1 Jul 2011 01:18:34 +0200
-Subject: [PATCH 01/10] carl9170 firmware: report device tallies
+Subject: [PATCH 01/14] carl9170 firmware: report device tallies
 
  - channel active counter
  - main channel clear counter

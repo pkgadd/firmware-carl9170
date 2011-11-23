@@ -1,7 +1,7 @@
 From 5a79392acf19327b34c5c9ff70208a58c07508c1 Mon Sep 17 00:00:00 2001
 From: Ignacy Gawedzki <i@lri.fr>
 Date: Thu, 14 Jul 2011 15:03:11 +0200
-Subject: [PATCH 06/10] carl9170 firmware: correct use of memset
+Subject: [PATCH 06/14] carl9170 firmware: correct use of memset
 
 I noticed something that may be a bug in wlan.c, in
 wlan_wol_connection_monitor():
