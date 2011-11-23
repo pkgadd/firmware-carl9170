@@ -1,3 +1,9 @@
+firmware-carl9170 (1.9.4-0~c0.aptosid.3) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 23 Nov 2011 18:49:04 +0100
+
 firmware-carl9170 (1.9.4-0~c0.aptosid.2) unstable; urgency=low
 
   * use reset local quiltrc.
