@@ -1,0 +1,8 @@
+# we need quilt to patch our cross toolchain
+firmware-carl9170 source: unneeded-build-dep-on-quilt
+
+# there is nothing to watch, as it's maintained in git only
+firmware-carl9170 source: debian-watch-file-is-missing
+
+# there is no upstream changelog
+firmware-carl9170: no-upstream-changelog
