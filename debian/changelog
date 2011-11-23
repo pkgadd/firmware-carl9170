@@ -1,3 +1,15 @@
+firmware-carl9170 (1.9.4-0~c0.aptosid.3) unstable; urgency=low
+
+  * drop duplicate build-depends:
+    - bison
+    - dejagnu
+    - libmpfr-dev
+    - zlib1g-dev
+  * override false lintian positive:
+    - P: firmware-carl9170 source: unneeded-build-dep-on-quilt
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 23 Nov 2011 19:15:02 +0100
+
 firmware-carl9170 (1.9.4-0~c0.aptosid.2) unstable; urgency=low
 
   * use reset local quiltrc.
