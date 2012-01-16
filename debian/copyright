@@ -66,12 +66,12 @@ Copyright: 2009-2011, Christian Lamparter <chunkeey@googlemail.com>
 License: GPL-2
 
 Files: debian/*
-Copyright: 2010-2011, Stefan Lippers-Hollmann <s.l-h@gmx.de>
+Copyright: 2010-2012, Stefan Lippers-Hollmann <s.l-h@gmx.de>
 License: GPL-2+
 
 Files: debian/rules
 Copyright: 2009, Jan Kiszka <jan.kiszka@web.de>
-           2010-2011, Stefan Lippers-Hollmann <s.l-h@gmx.de>
+           2010-2012, Stefan Lippers-Hollmann <s.l-h@gmx.de>
 License: GPL-2+
 
 License: GPL-2
