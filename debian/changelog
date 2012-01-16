@@ -1,3 +1,9 @@
+firmware-carl9170 (1.9.4-0~c0.aptosid.5) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 16 Jan 2012 01:04:06 +0100
+
 firmware-carl9170 (1.9.4-0~c0.aptosid.4) unstable; urgency=low
 
   * switch to compat level 9.
