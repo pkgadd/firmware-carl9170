@@ -1,8 +1,9 @@
 firmware-carl9170 (1.9.4-0~c0.aptosid.5) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * bump standards version to 3.9.3, no changes necessary.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 16 Jan 2012 01:04:06 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 23 Feb 2012 16:10:07 +0100
 
 firmware-carl9170 (1.9.4-0~c0.aptosid.4) unstable; urgency=low
 
