@@ -1,7 +1,7 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: carl9170fw
 Upstream-Contact: Christian Lamparter <chunkeey@googlemail.com>
-Source: git://git.kernel.org/pub/scm/linux/kernel/git/chr/carl9170fw.git
+Source: https://github.com/chunkeey/carl9170fw.git
 
 Files: *
 Copyright: 2000-2005, ZyDAS Technology Corporation

@@ -4,8 +4,9 @@ firmware-carl9170 (1.9.4-0~c0.aptosid.5) UNRELEASED; urgency=low
   * bump standards version to 3.9.3, no changes necessary.
   * update dep-5 version to final 1.0, no changes necessary:
     - order licenses alphabetically.
+  * use new git location for upstream sources.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 27 Feb 2012 22:59:53 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 17 Mar 2012 19:01:28 +0100
 
 firmware-carl9170 (1.9.4-0~c0.aptosid.4) unstable; urgency=low
 
