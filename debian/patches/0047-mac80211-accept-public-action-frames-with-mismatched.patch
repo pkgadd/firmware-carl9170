@@ -1,0 +1,50 @@
+From 3d744935c5ad5735c5a5ea0486e0c6389aa2c94f Mon Sep 17 00:00:00 2001
+From: Johannes Berg <johannes.berg@intel.com>
+Date: Tue, 6 Dec 2011 10:39:40 +0100
+Subject: [PATCH 47/63] mac80211: accept public action frames with mismatched
+ BSSID
+
+Arik's patch "mac80211: allow action frames with unknown
+BSSID in GO mode" allowed any action frames in P2P mode
+to go through, but only to cooked monitor interfaces as
+the IEEE80211_RX_RA_MATCH was still cleared. As a result
+my no-monitor patches broke invitation responses.
+
+Instead of allowing any action frames in P2P GO mode to
+go through with a wrong BSSID like that patch did, allow
+all public action frames. They will never be processed
+by mac80211, but can be reported via nl80211 then.
+
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: John W. Linville <linville@tuxdriver.com>
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+---
+ include/linux/ieee80211.h |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+--- a/include/linux/ieee80211.h
++++ b/include/linux/ieee80211.h
+@@ -1725,6 +1725,23 @@ static inline bool ieee80211_is_robust_m
+ }
+ 
+ /**
++ * ieee80211_is_public_action - check if frame is a public action frame
++ * @hdr: the frame
++ * @len: length of the frame
++ */
++static inline bool ieee80211_is_public_action(struct ieee80211_hdr *hdr,
++					      size_t len)
++{
++	struct ieee80211_mgmt *mgmt = (void *)hdr;
++
++	if (len < IEEE80211_MIN_ACTION_SIZE)
++		return false;
++	if (!ieee80211_is_action(hdr->frame_control))
++		return false;
++	return mgmt->u.action.category == WLAN_CATEGORY_PUBLIC;
++}
++
++/**
+  * ieee80211_fhss_chan_to_freq - get channel frequency
+  * @channel: the FHSS channel
+  *

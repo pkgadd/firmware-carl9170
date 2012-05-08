@@ -1,0 +1,30 @@
+From 8d6c5e6578b05a9309ff4323a84cb8d924d63623 Mon Sep 17 00:00:00 2001
+From: Christian Lamparter <chunkeey@googlemail.com>
+Date: Thu, 24 Nov 2011 01:32:38 +0100
+Subject: [PATCH 38/63] carl9170 firmware: optimize get_async
+
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+---
+ carlfw/include/io.h |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+--- a/carlfw/include/io.h
++++ b/carlfw/include/io.h
+@@ -81,13 +81,11 @@ static inline __inline uint32_t readl_as
+ 	uint32_t i = 0, read, tmp;
+ 
+ 	read = readl(addr);
+-	while (i++ < 10) {
++	do {
++		tmp = read;
+ 		tmp = readl(addr);
+-		if (tmp == read)
+-			break;
+-		else
+-			read = tmp;
+-	}
++		i++;
++	} while (tmp != read && i <= 10);
+ 
+ 	return read;
+ }

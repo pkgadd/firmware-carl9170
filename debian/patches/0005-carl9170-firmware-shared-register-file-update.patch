@@ -1,12 +1,12 @@
 From 4fc166c3e49e614efcfc4aeac1d84bc324730033 Mon Sep 17 00:00:00 2001
 From: Christian Lamparter <chunkeey@googlemail.com>
 Date: Sun, 10 Jul 2011 18:48:05 +0200
-Subject: [PATCH 05/14] carl9170 firmware: shared register file update
+Subject: [PATCH 05/63] carl9170 firmware: shared register file update
 
 Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
 ---
  include/shared/hw.h |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+ 1 file changed, 1 insertion(+)
 
 --- a/include/shared/hw.h
 +++ b/include/shared/hw.h

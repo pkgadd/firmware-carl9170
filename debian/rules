@@ -2,7 +2,7 @@
 
 # hardcode gcc version, we need to build-depend on a specific
 # gcc-$(GCC_VER)-source version anyways.
-GCC_VER=4.6
+GCC_VER=4.7
 
 # use parallel building for the toolchain, if allowed by buildd policies
 ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))

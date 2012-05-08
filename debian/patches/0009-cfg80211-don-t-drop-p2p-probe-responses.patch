@@ -1,7 +1,7 @@
 From eb8711c9917fc843fa675cc6fb0522cf71422550 Mon Sep 17 00:00:00 2001
 From: Eliad Peller <eliad@wizery.com>
 Date: Sun, 29 May 2011 12:53:20 +0000
-Subject: [PATCH 09/14] cfg80211: don't drop p2p probe responses
+Subject: [PATCH 09/63] cfg80211: don't drop p2p probe responses
 
 Commit 0a35d36 ("cfg80211: Use capability info to detect mesh beacons")
 assumed that probe response with both ESS and IBSS bits cleared
@@ -17,7 +17,7 @@ Signed-off-by: Eliad Peller <eliad@wizery.com>
 Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
 ---
  include/linux/ieee80211.h |    8 ++++++--
- 1 files changed, 6 insertions(+), 2 deletions(-)
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 --- a/include/linux/ieee80211.h
 +++ b/include/linux/ieee80211.h

@@ -1,0 +1,21 @@
+From 14108e0ff46ddbfa2fd1886ac9d73263c90fc1d5 Mon Sep 17 00:00:00 2001
+From: Christian Lamparter <chunkeey@googlemail.com>
+Date: Thu, 27 Oct 2011 15:41:32 +0200
+Subject: [PATCH 15/63] carl9170 firwmare: toolchain gcc 4.6.2
+
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+---
+ toolchain/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/toolchain/Makefile
++++ b/toolchain/Makefile
+@@ -6,7 +6,7 @@ NEWLIB_VER=1.19.0
+ NEWLIB_URL=ftp://sources.redhat.com/pub/newlib/newlib-$(NEWLIB_VER).tar.gz
+ NEWLIB_TAR=newlib-$(NEWLIB_VER).tar.gz
+ 
+-GCC_VER=4.6.1
++GCC_VER=4.6.2
+ GCC_URL=http://mirrors.kernel.org/gnu/gcc/gcc-$(GCC_VER)/gcc-core-$(GCC_VER).tar.bz2
+ GCC_TAR=gcc-core-$(GCC_VER).tar.bz2
+ 

@@ -1,7 +1,7 @@
 From d1dbdf395b7ee5330b22008ba7c2cc704e157229 Mon Sep 17 00:00:00 2001
 From: Christian Lamparter <chunkeey@googlemail.com>
 Date: Wed, 17 Aug 2011 13:24:10 +0200
-Subject: [PATCH 14/14] config: import latest kconfig
+Subject: [PATCH 14/63] config: import latest kconfig
 
 commit 2a11c8ea20bf850b3a2c60db8c2e7497d28aba99
 Subject: "kconfig: Introduce IS_ENABLED(), IS_BUILTIN() and IS_MODULE()"
@@ -10,15 +10,15 @@ Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
 ---
  config/.gitignore     |    4 +-
  config/CMakeLists.txt |    4 +-
- config/conf.c         |  263 +++++++++++--------
+ config/conf.c         |  263 ++++++++++--------
  config/confdata.c     |  719 +++++++++++++++++++++++++++++++++----------------
  config/expr.c         |  158 +++++++----
- config/expr.h         |   28 +--
- config/lkc.h          |   44 +++-
+ config/expr.h         |   28 +-
+ config/lkc.h          |   44 ++-
  config/lkc_proto.h    |   75 +++---
- config/menu.c         |  109 +++++++--
- config/symbol.c       |  428 ++++++++++++++++++++++++++----
- config/util.c         |   59 ++++-
+ config/menu.c         |  109 ++++++--
+ config/symbol.c       |  428 +++++++++++++++++++++++++----
+ config/util.c         |   59 +++-
  config/zconf.gperf    |    3 +-
  config/zconf.l        |   49 ++--
  config/zconf.y        |   81 ++++--

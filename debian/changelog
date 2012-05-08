@@ -1,12 +1,64 @@
-firmware-carl9170 (1.9.4-0~c0.aptosid.5) UNRELEASED; urgency=low
+firmware-carl9170 (1.9.4-0~c0.aptosid.5) unstable; urgency=low
 
-  * NOT RELEASED YET
   * bump standards version to 3.9.3, no changes necessary.
   * update dep-5 version to final 1.0, no changes necessary:
     - order licenses alphabetically.
   * use new git location for upstream sources.
+  * revert back to compat level 8, to avoid dpkg-buildflags getting 
+    applied to building gcc, which FTBS due to -Werror=format-security.
+  * switch to gcc-4.7.
+  * import latest upstream commits:
+    - carl9170 firwmare: toolchain gcc 4.6.2
+    - carl9170 firmware: move wowlan routines into separate
+    - carl9170 firmware: refactoring wlan_tx_ampdu
+    - carl9170 firmware: toolchain binutils 2.22
+    - carl9170 firmware: remove wol #ifdef leftovers
+    - config: Fix help text not displayed in choice option.
+    - config: factor code in menu_get_ext_help()
+    - config: fix __enabled_ macros definition for invisible
+    - wireless: Introduce defines for BAR TID_INFO &
+    - ieee80211: introduce Self Protected Action codes
+    - mac80211: update mesh peering frame format
+    - ieee80211: add mesh action codes
+    - mac80211: update mesh path selection frame format
+    - mac80211: mesh gate implementation
+    - mac80211: Mesh data frames must have the QoS header
+    - cfg80211: add cfg80211_find_vendor_ie() function
+    - mac80211: handle TDLS high-level commands and frames
+    - mac80211: handle HT PHY BSS membership selector value
+    - ieee80211: Define cipher suite selector for WPI-SMS4
+    - mac80211: QoS multicast frames have No Ack policy
+    - carl9170 firmware: add __be{16,32,64} typedefs
+    - carl9170 firmware: enable
+    - carl9170 firmware: fix minute errors
+    - carl9170 firmware: optimize get_async
+    - carl9170 firmware: trivial checkpatch fixes
+    - carl9170 firmware: fix firmware build script
+    - carl9170 firmware: remove gcc workaround
+    - carl9170 firmware: add init_queue helper function
+    - carl9170 firmware: fix terminator assert
+    - carl9170 firmware: get rid of nested wlan_tx calls
+    - carl9170 firmware: double check if unlinked desc
+    - carl9170 firmware: remove debug tx/rx paths crud
+    - mac80211: accept public action frames with mismatched
+    - ieee80211: Introduce ieee80211_is_first_frag
+    - carl9170 firmware: minor wlan cleanup
+    - carl9170 firmware: toolchain newlib 1.20.0
+    - carl9170 firwmare: toolchain gcc 4.6.3
+    - carl9170 firmware: update version to 1.9.5
+    - carl9170 firmware: fix BAR->BA delivery
+    - carl9170 firmware: remove BAR->BA clutter
+    - kconfig: use xfwrite wrapper function to silence
+    - kbuild: Fix compiler warning with assertion when
+    - kconfig: fix new choices being skipped upon config
+    - Revert "kconfig: fix __enabled_ macros definition for
+    - kconfig: delete last traces of __enabled_ from
+    - wireless: rename ht_info to ht_operation
+    - mac80211: fix the sparse warnings on endian handling
+    - mac80211: Implement mesh synchronization framework
+    - mac80211: Set the correct values for hwmp (1) an
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 17 Mar 2012 19:01:28 +0100
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 09 May 2012 01:23:09 +0200
 
 firmware-carl9170 (1.9.4-0~c0.aptosid.4) unstable; urgency=low
 
