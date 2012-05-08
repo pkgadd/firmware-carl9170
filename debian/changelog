@@ -5,6 +5,9 @@ firmware-carl9170 (1.9.4-0~c0.aptosid.5) UNRELEASED; urgency=low
   * update dep-5 version to final 1.0, no changes necessary:
     - order licenses alphabetically.
   * use new git location for upstream sources.
+  * revert back to compat level 8, to avoid dpkg-buildflags getting 
+    applied to building gcc, which FTBS due to -Werror=format-security.
+  * switch to gcc-4.7.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 17 Mar 2012 19:01:28 +0100
 

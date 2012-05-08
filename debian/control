@@ -51,7 +51,7 @@ Build-Depends: debhelper (>= 9.20120115),
  make (>= 3.81),
  libgmp-dev,
  libmpc-dev,
- gcc-4.6-source,
+ gcc-4.7-source,
  newlib-source,
  binutils-source,
  quilt
