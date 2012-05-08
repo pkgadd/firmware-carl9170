@@ -1,0 +1,24 @@
+From 500397585d53a08f83d1798c0e871c91667a2be3 Mon Sep 17 00:00:00 2001
+From: Christian Lamparter <chunkeey@googlemail.com>
+Date: Wed, 14 Mar 2012 21:20:36 +0100
+Subject: [PATCH 52/63] carl9170 firmware: update version to 1.9.5
+
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+---
+ include/shared/version.h |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+--- a/include/shared/version.h
++++ b/include/shared/version.h
+@@ -1,7 +1,7 @@
+ #ifndef __CARL9170_SHARED_VERSION_H
+ #define __CARL9170_SHARED_VERSION_H
+-#define CARL9170FW_VERSION_YEAR 11
+-#define CARL9170FW_VERSION_MONTH 8
+-#define CARL9170FW_VERSION_DAY 15
+-#define CARL9170FW_VERSION_GIT "1.9.4"
++#define CARL9170FW_VERSION_YEAR 12
++#define CARL9170FW_VERSION_MONTH 3
++#define CARL9170FW_VERSION_DAY 14
++#define CARL9170FW_VERSION_GIT "1.9.5"
+ #endif /* __CARL9170_SHARED_VERSION_H */

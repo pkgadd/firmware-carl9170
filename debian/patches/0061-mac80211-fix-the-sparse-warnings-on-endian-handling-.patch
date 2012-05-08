@@ -1,0 +1,33 @@
+From 8db57a27c9083a7ad243284afd27a5589fef78d5 Mon Sep 17 00:00:00 2001
+From: Chun-Yeow Yeoh <yeohchunyeow@gmail.com>
+Date: Mon, 19 Mar 2012 21:38:46 +0800
+Subject: [PATCH 61/63] mac80211: fix the sparse warnings on endian handling
+ in RANN propagation
+
+The HWMP sequence number of received RANN element is compared to decide whether to be
+propagated. The sequence number is required to covert from 32bit little endian data into
+CPUs endianness for comparison. The same applies to the RANN metric.
+
+Signed-off-by: Chun-Yeow Yeoh <yeohchunyeow@gmail.com>
+Signed-off-by: Javier Cardona <javier@cozybit.com>
+Signed-off-by: John W. Linville <linville@tuxdriver.com>
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+---
+ include/linux/ieee80211.h |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/include/linux/ieee80211.h
++++ b/include/linux/ieee80211.h
+@@ -653,9 +653,9 @@ struct ieee80211_rann_ie {
+ 	u8 rann_hopcount;
+ 	u8 rann_ttl;
+ 	u8 rann_addr[6];
+-	u32 rann_seq;
+-	u32 rann_interval;
+-	u32 rann_metric;
++	__le32 rann_seq;
++	__le32 rann_interval;
++	__le32 rann_metric;
+ } __attribute__ ((packed));
+ 
+ enum ieee80211_rann_flags {

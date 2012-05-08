@@ -1,0 +1,62 @@
+From b19f7afaf03733a84c9a152a9d59648baffce0e3 Mon Sep 17 00:00:00 2001
+From: Javier Cardona <javier@cozybit.com>
+Date: Sat, 31 Mar 2012 11:31:32 -0700
+Subject: [PATCH 62/63] mac80211: Implement mesh synchronization framework
+
+This patch adds MBSS extensible synchronization framework (Sec.
+13.13.2 of IEEE Std. 802.11-2012).
+
+The framework is implemented via an ops table which defines the
+following functions:
+
+    rx_bcn_presp() - this is called every time a mesh beacon is
+received.
+    adjust_tbtt() - this is called immediately before a beacon is about
+to be transmitted.
+
+The default neighbor offset synchronization defined in the standard is
+implemented.  We also provide template functions for vendor specific
+methods.
+
+When neighbor offset synchronization is active (which is the default)
+mesh neighbors in the same MBSS will track timing offsets to each other
+and compensate clock drift.
+
+In our tests we observed that this mesh synchronization implementation
+successfully corrected drifts between stations of ~2PPM while
+introducing a jitter of ~20us.
+
+It is also possible to test this framework on mac80211_hwsim simulated
+phys to see how it behaves under different topologies, over poor links,
+etc.
+
+Signed-off-by: Marco Porsch <marco.porsch@s2005.tu-chemnitz.de>
+Signed-off-by: Pavel Zubarev <pavel.zubarev@gmail.com>
+Signed-off-by: Javier Cardona <javier@cozybit.com>
+Signed-off-by: John W. Linville <linville@tuxdriver.com>
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+---
+ include/linux/ieee80211.h |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+--- a/include/linux/ieee80211.h
++++ b/include/linux/ieee80211.h
+@@ -1469,6 +1469,18 @@ enum ieee80211_tdls_actioncode {
+ #define WLAN_TDLS_SNAP_RFTYPE	0x2
+ 
+ /**
++ * enum - mesh synchronization method identifier
++ *
++ * @IEEE80211_SYNC_METHOD_NEIGHBOR_OFFSET: the default synchronization method
++ * @IEEE80211_SYNC_METHOD_VENDOR: a vendor specific synchronization method
++ * that will be specified in a vendor specific information element
++ */
++enum {
++	IEEE80211_SYNC_METHOD_NEIGHBOR_OFFSET = 1,
++	IEEE80211_SYNC_METHOD_VENDOR = 255,
++};
++
++/**
+  * enum - mesh path selection protocol identifier
+  *
+  * @IEEE80211_PATH_PROTOCOL_HWMP: the default path selection protocol

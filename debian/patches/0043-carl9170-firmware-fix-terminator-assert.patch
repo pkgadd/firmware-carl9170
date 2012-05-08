@@ -1,0 +1,27 @@
+From 34bf5a5839f48f61e794cb141487e53e18d7a5ab Mon Sep 17 00:00:00 2001
+From: Christian Lamparter <chunkeey@googlemail.com>
+Date: Fri, 23 Dec 2011 01:22:28 +0100
+Subject: [PATCH 43/63] carl9170 firmware: fix terminator assert
+
+While calculating the number of assigned
+terminator descriptors is easy enough for
+an human at "compile" time, gcc isn't that
+clever. Therefore the check has to run at
+runtime.
+
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+---
+ carlfw/src/dma.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/carlfw/src/dma.c
++++ b/carlfw/src/dma.c
+@@ -93,7 +93,7 @@ void dma_init_descriptors(void)
+ 		init_queue(&fw.wlan.cab_queue[j], &dma_mem.terminator[i++]);
+ #endif /* CONFIG_CARL9170FW_CAB_QUEUE */
+ 
+-	BUILD_BUG_ON(AR9170_TERMINATOR_NUMBER != j);
++	BUG_ON(AR9170_TERMINATOR_NUMBER != i);
+ 
+ 	DBG("Blocks:%d [tx:%d, rx:%d] Terminators:%d/%d\n",
+ 	    AR9170_BLOCK_NUMBER, AR9170_TX_BLOCK_NUMBER,

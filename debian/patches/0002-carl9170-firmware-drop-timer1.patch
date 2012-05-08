@@ -1,12 +1,12 @@
 From ab43d8cf291c5a517841ac0ae445c9bc6d74cf5c Mon Sep 17 00:00:00 2001
 From: Christian Lamparter <chunkeey@googlemail.com>
 Date: Fri, 1 Jul 2011 14:18:09 +0200
-Subject: [PATCH 02/14] carl9170 firmware: drop timer1
+Subject: [PATCH 02/63] carl9170 firmware: drop timer1
 
 Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
 ---
  carlfw/src/main.c |    8 --------
- 1 files changed, 0 insertions(+), 8 deletions(-)
+ 1 file changed, 8 deletions(-)
 
 --- a/carlfw/src/main.c
 +++ b/carlfw/src/main.c

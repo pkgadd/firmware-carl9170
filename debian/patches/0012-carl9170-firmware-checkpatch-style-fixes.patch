@@ -1,7 +1,7 @@
 From 484cb254482ee644cc2981d1e2753fca2718bcd3 Mon Sep 17 00:00:00 2001
 From: Christian Lamparter <chunkeey@googlemail.com>
 Date: Mon, 15 Aug 2011 18:58:52 +0200
-Subject: [PATCH 12/14] carl9170 firmware: checkpatch/style fixes
+Subject: [PATCH 12/63] carl9170 firmware: checkpatch/style fixes
 
 Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
 ---

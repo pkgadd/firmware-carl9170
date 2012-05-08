@@ -1,0 +1,76 @@
+From 1fcad5bcdc30a644eee9722608c87d6362b9d644 Mon Sep 17 00:00:00 2001
+From: Christian Lamparter <chunkeey@googlemail.com>
+Date: Thu, 24 Nov 2011 00:30:41 +0100
+Subject: [PATCH 36/63] carl9170 firmware: enable
+ CONFIG_CARL9170FW_USB_INIT_FIRMWARE by default
+
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+---
+ carlfw/src/fw.c    |   10 ++++------
+ carlfw/usb/Kconfig |    8 --------
+ carlfw/usb/usb.c   |    4 ----
+ 3 files changed, 4 insertions(+), 18 deletions(-)
+
+--- a/carlfw/src/fw.c
++++ b/carlfw/src/fw.c
+@@ -38,15 +38,13 @@ const struct carl9170_firmware_descripto
+ 					BIT(CARL9170FW_HANDLE_BACK_REQ) |
+ 					BIT(CARL9170FW_RX_FILTER) |
+ 					BIT(CARL9170FW_HW_COUNTERS) |
+-#ifdef CONFIG_CARL9170FW_USB_INIT_FIRMWARE
+ 					BIT(CARL9170FW_USB_INIT_FIRMWARE) |
+-# ifdef CONFIG_CARL9170FW_USB_UP_STREAM
++#ifdef CONFIG_CARL9170FW_USB_UP_STREAM
+ 					BIT(CARL9170FW_USB_UP_STREAM) |
+-# endif /* CONFIG_CARL9170FW_USB_UP_STREAM */
+-# ifdef CONFIG_CARL9170FW_USB_DOWN_STREAM
++#endif /* CONFIG_CARL9170FW_USB_UP_STREAM */
++#ifdef CONFIG_CARL9170FW_USB_DOWN_STREAM
+ 					BIT(CARL9170FW_USB_DOWN_STREAM) |
+-# endif /* CONFIG_CARL9170FW_USB_DOWN_STREAM */
+-#endif /* CONFIG_CARL9170FW_USB_INIT_FIRMWARE */
++#endif /* CONFIG_CARL9170FW_USB_DOWN_STREAM */
+ #ifdef CONFIG_CARL9170FW_RADIO_FUNCTIONS
+ 					BIT(CARL9170FW_COMMAND_PHY) |
+ 					BIT(CARL9170FW_PSM) |
+--- a/carlfw/usb/Kconfig
++++ b/carlfw/usb/Kconfig
+@@ -9,14 +9,6 @@ config CARL9170FW_USB_STANDARD_CMDS
+ 
+ 	 Say Y, unless you don't care if lsusb -v fails.
+ 
+-config CARL9170FW_USB_INIT_FIRMWARE
+-	def_bool y
+-	prompt "USB Interface Setup"
+-	---help---
+-	 Firmware should initialize the USB chip.
+-
+-	 Just say Y.
+-
+ config CARL9170FW_USB_UP_STREAM
+ 	def_bool y
+ 	prompt "USB Upload Stream"
+--- a/carlfw/usb/usb.c
++++ b/carlfw/usb/usb.c
+@@ -189,7 +189,6 @@ static void usb_reset_eps(void)
+ #endif /* CONFIG_CARL9170FW_USB_MODESWITCH */
+ 
+ 
+-#ifdef CONFIG_CARL9170FW_USB_INIT_FIRMWARE
+ static void usb_pta_init(void)
+ {
+ 	unsigned int usb_dma_ctrl = 0;
+@@ -251,13 +250,10 @@ static void usb_pta_init(void)
+ 
+ 	set(AR9170_USB_REG_DMA_CTL, usb_dma_ctrl);
+ }
+-#endif /* CONFIG_CARL9170FW_USB_INIT_FIRMWARE */
+ 
+ void usb_init(void)
+ {
+-#ifdef CONFIG_CARL9170FW_USB_INIT_FIRMWARE
+ 	usb_pta_init();
+-#endif /* CONFIG_CARL9170FW_USB_INIT_FIRMWARE */
+ 
+ 	fw.usb.config = 1;
+ 	/*

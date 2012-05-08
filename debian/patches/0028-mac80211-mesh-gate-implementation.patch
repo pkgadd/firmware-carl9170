@@ -1,0 +1,31 @@
+From cbb4c4799ff0ed314b91461c332ac48a513ce8f4 Mon Sep 17 00:00:00 2001
+From: Javier Cardona <javier@cozybit.com>
+Date: Tue, 9 Aug 2011 16:45:08 -0700
+Subject: [PATCH 28/63] mac80211: mesh gate implementation
+
+In this implementation, a mesh gate is a root node with a certain bit
+set in its RANN flags. The mpath to this root node is marked as a path
+to a gate, and added to our list of known gates for this if_mesh. Once a
+path discovery process fails, we forward the unresolved frames to a
+known gate. Thanks to Luis Rodriguez for refactoring and bug fix help.
+
+Signed-off-by: Javier Cardona <javier@cozybit.com>
+Signed-off-by: John W. Linville <linville@tuxdriver.com>
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+---
+ include/linux/ieee80211.h |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/include/linux/ieee80211.h
++++ b/include/linux/ieee80211.h
+@@ -646,6 +646,10 @@ struct ieee80211_rann_ie {
+ 	u32 rann_metric;
+ } __attribute__ ((packed));
+ 
++enum ieee80211_rann_flags {
++	RANN_FLAG_IS_GATE = 1 << 0,
++};
++
+ #define WLAN_SA_QUERY_TR_ID_LEN 2
+ 
+ struct ieee80211_mgmt {

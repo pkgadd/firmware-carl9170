@@ -1,12 +1,12 @@
 From 904914f47c3b6974622cba176c6e9fb76b5f06e5 Mon Sep 17 00:00:00 2001
 From: Christian Lamparter <chunkeey@googlemail.com>
 Date: Sun, 10 Jul 2011 18:45:59 +0200
-Subject: [PATCH 04/14] carl9170 firmware: fix use of uninitialized value
+Subject: [PATCH 04/63] carl9170 firmware: fix use of uninitialized value
 
 Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
 ---
  carlfw/src/cmd.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/carlfw/src/cmd.c
 +++ b/carlfw/src/cmd.c

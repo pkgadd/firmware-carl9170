@@ -1,0 +1,31 @@
+From 2e151987af82a9a2bc3e8680d99861d2c5ba3873 Mon Sep 17 00:00:00 2001
+From: Christian Lamparter <chunkeey@googlemail.com>
+Date: Fri, 23 Dec 2011 01:12:53 +0100
+Subject: [PATCH 41/63] carl9170 firmware: remove gcc workaround
+
+this workaround is no longer necessary, gcc
+now compiles the code without any spurious
+complains.
+
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+---
+ carlfw/src/dma.c |    6 ------
+ 1 file changed, 6 deletions(-)
+
+--- a/carlfw/src/dma.c
++++ b/carlfw/src/dma.c
+@@ -84,14 +84,8 @@ void dma_init_descriptors(void)
+ 	fw.wlan.fw_desc = &dma_mem.terminator[i++];
+ 
+ #ifdef CONFIG_CARL9170FW_CAB_QUEUE
+-	/* GCC bug ? */
+-# if (CARL9170_INTF_NUM != 2)
+ 	for (j = 0; j < CARL9170_INTF_NUM; j++)
+ 		fw.wlan.cab_queue[j].head = fw.wlan.cab_queue[j].terminator = &dma_mem.terminator[i++];
+-#else
+-	fw.wlan.cab_queue[0].head = fw.wlan.cab_queue[0].terminator = &dma_mem.terminator[i++];
+-	fw.wlan.cab_queue[1].head = fw.wlan.cab_queue[1].terminator = &dma_mem.terminator[i++];
+-#endif
+ #endif /* CONFIG_CARL9170FW_CAB_QUEUE */
+ 
+ 	BUILD_BUG_ON(AR9170_TERMINATOR_NUMBER != j);

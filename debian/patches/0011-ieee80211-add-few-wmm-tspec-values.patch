@@ -1,7 +1,7 @@
 From 491f71f4ff849a9a62ec619693c2108423bf9db1 Mon Sep 17 00:00:00 2001
 From: Kalle Valo <kvalo@qca.qualcomm.com>
 Date: Sun, 17 Jul 2011 12:13:56 +0300
-Subject: [PATCH 11/14] ieee80211: add few wmm tspec values
+Subject: [PATCH 11/63] ieee80211: add few wmm tspec values
 
 These are needed by ath6kl for parsing tspec status from an IE.
 
@@ -10,7 +10,7 @@ Signed-off-by: John W. Linville <linville@tuxdriver.com>
 Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
 ---
  include/linux/ieee80211.h |   37 +++++++++++++++++++++++++++++++++++++
- 1 files changed, 37 insertions(+), 0 deletions(-)
+ 1 file changed, 37 insertions(+)
 
 --- a/include/linux/ieee80211.h
 +++ b/include/linux/ieee80211.h

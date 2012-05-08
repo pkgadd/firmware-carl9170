@@ -1,0 +1,147 @@
+From 6ab42ff4e38c00d5ed4624159f011dc7f9ecdb1c Mon Sep 17 00:00:00 2001
+From: Arik Nemtsov <arik@wizery.com>
+Date: Wed, 28 Sep 2011 14:12:52 +0300
+Subject: [PATCH 31/63] mac80211: handle TDLS high-level commands and frames
+
+Register and implement the TDLS cfg80211 callback functions.
+
+Internally prepare and send TDLS management frames. We incorporate
+local STA capabilities and supported rates with extra IEs given by
+usermode. The resulting packet is either encapsulated in a data frame,
+or assembled as an action frame. It is transmitted either directly or
+through the AP, as mandated by the TDLS specification.
+
+Declare support for the TDLS external setup wiphy capability. This
+tells usermode to handle link setup and discovery on its own, and use the
+kernel driver for sending TDLS mgmt packets.
+
+Signed-off-by: Arik Nemtsov <arik@wizery.com>
+Cc: Kalyan C Gaddam <chakkal@iit.edu>
+Signed-off-by: John W. Linville <linville@tuxdriver.com>
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+---
+ include/linux/ieee80211.h |   85 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
+
+--- a/include/linux/ieee80211.h
++++ b/include/linux/ieee80211.h
+@@ -772,6 +772,12 @@ struct ieee80211_mgmt {
+ 					u8 action;
+ 					u8 smps_control;
+ 				} __attribute__ ((packed)) ht_smps;
++				struct {
++					u8 action_code;
++					u8 dialog_token;
++					__le16 capability;
++					u8 variable[0];
++				} __packed tdls_discover_resp;
+ 			} u;
+ 		} __attribute__ ((packed)) action;
+ 	} u;
+@@ -818,6 +824,52 @@ struct ieee80211_pspoll {
+ 	u8 ta[6];
+ } __attribute__ ((packed));
+ 
++/* TDLS */
++
++/* Link-id information element */
++struct ieee80211_tdls_lnkie {
++	u8 ie_type; /* Link Identifier IE */
++	u8 ie_len;
++	u8 bssid[6];
++	u8 init_sta[6];
++	u8 resp_sta[6];
++} __packed;
++
++struct ieee80211_tdls_data {
++	u8 da[6];
++	u8 sa[6];
++	__be16 ether_type;
++	u8 payload_type;
++	u8 category;
++	u8 action_code;
++	union {
++		struct {
++			u8 dialog_token;
++			__le16 capability;
++			u8 variable[0];
++		} __packed setup_req;
++		struct {
++			__le16 status_code;
++			u8 dialog_token;
++			__le16 capability;
++			u8 variable[0];
++		} __packed setup_resp;
++		struct {
++			__le16 status_code;
++			u8 dialog_token;
++			u8 variable[0];
++		} __packed setup_cfm;
++		struct {
++			__le16 reason_code;
++			u8 variable[0];
++		} __packed teardown;
++		struct {
++			u8 dialog_token;
++			u8 variable[0];
++		} __packed discover_req;
++	} u;
++} __packed;
++
+ /**
+  * struct ieee80211_bar - HT Block Ack Request
+  *
+@@ -1226,6 +1278,8 @@ enum ieee80211_eid {
+ 	WLAN_EID_TS_DELAY = 43,
+ 	WLAN_EID_TCLAS_PROCESSING = 44,
+ 	WLAN_EID_QOS_CAPA = 46,
++	/* 802.11z */
++	WLAN_EID_LINK_ID = 101,
+ 	/* 802.11s */
+ 	WLAN_EID_MESH_CONFIG = 113,
+ 	WLAN_EID_MESH_ID = 114,
+@@ -1309,6 +1363,7 @@ enum ieee80211_category {
+ 	WLAN_CATEGORY_HT = 7,
+ 	WLAN_CATEGORY_SA_QUERY = 8,
+ 	WLAN_CATEGORY_PROTECTED_DUAL_OF_ACTION = 9,
++	WLAN_CATEGORY_TDLS = 12,
+ 	WLAN_CATEGORY_MESH_ACTION = 13,
+ 	WLAN_CATEGORY_MULTIHOP_ACTION = 14,
+ 	WLAN_CATEGORY_SELF_PROTECTED = 15,
+@@ -1372,6 +1427,36 @@ enum ieee80211_key_len {
+ 	WLAN_KEY_LEN_AES_CMAC = 16,
+ };
+ 
++/* Public action codes */
++enum ieee80211_pub_actioncode {
++	WLAN_PUB_ACTION_TDLS_DISCOVER_RES = 14,
++};
++
++/* TDLS action codes */
++enum ieee80211_tdls_actioncode {
++	WLAN_TDLS_SETUP_REQUEST = 0,
++	WLAN_TDLS_SETUP_RESPONSE = 1,
++	WLAN_TDLS_SETUP_CONFIRM = 2,
++	WLAN_TDLS_TEARDOWN = 3,
++	WLAN_TDLS_PEER_TRAFFIC_INDICATION = 4,
++	WLAN_TDLS_CHANNEL_SWITCH_REQUEST = 5,
++	WLAN_TDLS_CHANNEL_SWITCH_RESPONSE = 6,
++	WLAN_TDLS_PEER_PSM_REQUEST = 7,
++	WLAN_TDLS_PEER_PSM_RESPONSE = 8,
++	WLAN_TDLS_PEER_TRAFFIC_RESPONSE = 9,
++	WLAN_TDLS_DISCOVERY_REQUEST = 10,
++};
++
++/*
++ * TDLS capabililites to be enabled in the 5th byte of the
++ * @WLAN_EID_EXT_CAPABILITY information element
++ */
++#define WLAN_EXT_CAPA5_TDLS_ENABLED	BIT(5)
++#define WLAN_EXT_CAPA5_TDLS_PROHIBITED	BIT(6)
++
++/* TDLS specific payload type in the LLC/SNAP header */
++#define WLAN_TDLS_SNAP_RFTYPE	0x2
++
+ /**
+  * enum - mesh path selection protocol identifier
+  *
