@@ -1,3 +1,9 @@
+firmware-carl9170 (1.9.4-0~c0.aptosid.7) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 09 May 2012 15:28:15 +0200
+
 firmware-carl9170 (1.9.4-0~c0.aptosid.6) unstable; urgency=low
 
   * update to compat level 9 again, but disable hardening, as gcc FTBS with it
