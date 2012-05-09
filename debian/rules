@@ -12,6 +12,10 @@ ifdef BUILD_JOBS
   JOBS_ARG = -j$(BUILD_JOBS)
 endif
 
+# disable hardening for building gcc, as it FTBS with -Werror=format-security
+DEB_BUILD_MAINT_OPTIONS=hardening=-all
+export DEB_BUILD_MAINT_OPTIONS
+
 %:
 	dh  $@
 
