@@ -19,6 +19,8 @@ override_dh_auto_configure:
 	# stick to the default config
 	#cp --remove-destination debian/carl9170.config .config
 	./autogen.sh config </dev/null
+	# dump config to stdout
+	cat $(CURDIR)/.config
 	dh_auto_configure
 
 override_dh_auto_build:

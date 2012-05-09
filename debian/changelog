@@ -57,8 +57,9 @@ firmware-carl9170 (1.9.4-0~c0.aptosid.5) unstable; urgency=low
     - mac80211: fix the sparse warnings on endian handling
     - mac80211: Implement mesh synchronization framework
     - mac80211: Set the correct values for hwmp (1) an
+  * dump chosen firmware config to STDOUT/ build log.
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 09 May 2012 01:23:09 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 09 May 2012 02:02:53 +0200
 
 firmware-carl9170 (1.9.4-0~c0.aptosid.4) unstable; urgency=low
 
