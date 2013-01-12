@@ -31,21 +31,21 @@
 		more							\
 	}
 
-const struct carl9170_firmware_descriptor __section(fwdsc) carl9170fw_desc = {
+const struct carl9170_firmware_descriptor __section(fwdsc) __visible carl9170fw_desc = {
 	FILL(otus, OTUS,
 	     .feature_set = cpu_to_le32(BIT(CARL9170FW_DUMMY_FEATURE) |
 					BIT(CARL9170FW_USB_RESP_EP2) |
 					BIT(CARL9170FW_HANDLE_BACK_REQ) |
 					BIT(CARL9170FW_RX_FILTER) |
-#ifdef CONFIG_CARL9170FW_USB_INIT_FIRMWARE
+					BIT(CARL9170FW_HW_COUNTERS) |
+					BIT(CARL9170FW_RX_BA_FILTER) |
 					BIT(CARL9170FW_USB_INIT_FIRMWARE) |
-# ifdef CONFIG_CARL9170FW_USB_UP_STREAM
+#ifdef CONFIG_CARL9170FW_USB_UP_STREAM
 					BIT(CARL9170FW_USB_UP_STREAM) |
-# endif /* CONFIG_CARL9170FW_USB_UP_STREAM */
-# ifdef CONFIG_CARL9170FW_USB_DOWN_STREAM
+#endif /* CONFIG_CARL9170FW_USB_UP_STREAM */
+#ifdef CONFIG_CARL9170FW_USB_DOWN_STREAM
 					BIT(CARL9170FW_USB_DOWN_STREAM) |
-# endif /* CONFIG_CARL9170FW_USB_DOWN_STREAM */
-#endif /* CONFIG_CARL9170FW_USB_INIT_FIRMWARE */
+#endif /* CONFIG_CARL9170FW_USB_DOWN_STREAM */
 #ifdef CONFIG_CARL9170FW_RADIO_FUNCTIONS
 					BIT(CARL9170FW_COMMAND_PHY) |
 					BIT(CARL9170FW_PSM) |
@@ -54,9 +54,7 @@ const struct carl9170_firmware_descriptor __section(fwdsc) carl9170fw_desc = {
 #ifdef CONFIG_CARL9170FW_SECURITY_ENGINE
 					BIT(CARL9170FW_COMMAND_CAM) |
 #endif /* CONFIG_CARL9170FW_SECURITY_ENGINE */
-#ifdef CONFIG_CARL9170FW_CAB_QUEUE
 					BIT(CARL9170FW_WLANTX_CAB) |
-#endif /* CONFIG_CARL9170FW_CAB_QUEUE */
 #ifdef CONFIG_CARL9170FW_UNUSABLE
 					BIT(CARL9170FW_UNUSABLE) |
 #endif /* CONFIG_CARL9170FW_UNUSABLE */
@@ -103,8 +101,8 @@ const struct carl9170_firmware_descriptor __section(fwdsc) carl9170fw_desc = {
 	FILL(dbg, DBG,
 	     .bogoclock_addr = cpu_to_le32(0),
 	     .counter_addr = cpu_to_le32(&fw.counter),
-	     .rx_total_addr = cpu_to_le32(&fw.wlan.rx_total),
-	     .rx_overrun_addr = cpu_to_le32(&fw.wlan.rx_overruns),
+	     .rx_total_addr = cpu_to_le32(0),
+	     .rx_overrun_addr = cpu_to_le32(0),
 	     .rx_filter = cpu_to_le32(&fw.wlan.rx_filter),
 	),
 

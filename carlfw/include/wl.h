@@ -1,7 +1,7 @@
 /*
  * carl9170 firmware - used by the ar9170 wireless device
  *
- * WLAN
+ * shared WLAN functions, interfaces and definitions
  *
  * Copyright (c) 2000-2005 ZyDAS Technology Corporation
  * Copyright (c) 2007-2009 Atheros Communications, Inc.
@@ -254,18 +254,35 @@ static inline __inline __hot void read_tsf(uint32_t *tsf)
 	tsf[1] = get(AR9170_MAC_REG_TSF_H);
 }
 
+/* This function will only work on uint32_t-aligned pointers! */
+static inline bool compare_ether_address(const void *_d0, const void *_d1)
+{
+	const uint32_t *d0 = _d0;
+	const uint32_t *d1 = _d1;
+
+	/* BUG_ON((unsigned long)d0 & 3 || (unsigned long)d1 & 3)) */
+	return !((d0[0] ^ d1[0]) | (unsigned short)(d0[1] ^ d1[1]));
+}
+
 void wlan_tx(struct dma_desc *desc);
+void wlan_tx_fw(struct carl9170_tx_superdesc *super, fw_desc_callback_t cb);
 void wlan_timer(void);
 void handle_wlan(void);
+
+void handle_wlan_rx(void);
+
+void wlan_send_buffered_tx_status(void);
+void wlan_send_buffered_cab(void);
+void wlan_send_buffered_ba(void);
+void handle_wlan_tx_completion(void);
+void wlan_dma_bump(unsigned int qidx);
 
 void wlan_cab_flush_queue(const unsigned int vif);
 void wlan_modify_beacon(const unsigned int vif,
 			const unsigned int bcn_addr,
 			const unsigned int bcn_len);
 
-void wlan_tx_complete(struct carl9170_tx_superframe *super,
-                      bool txs);
-
+void wlan_tx_complete(struct carl9170_tx_superframe *super, bool txs);
 void wlan_prepare_wol(void);
 
 static inline void __check_wlantx(void)

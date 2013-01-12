@@ -51,11 +51,7 @@ struct dma_desc {
 
 #define AR9170_TERMINATOR_NUMBER_INT	1
 
-#ifdef CONFIG_CARL9170FW_CAB_QUEUE
 #define AR9170_TERMINATOR_NUMBER_CAB	CARL9170_INTF_NUM
-#else
-#define AR9170_TERMINATOR_NUMBER_CAB	0
-#endif /* CONFIG_CARL9170FW_CAB_QUEUE */
 
 #define AR9170_TERMINATOR_NUMBER (AR9170_TERMINATOR_NUMBER_B + \
 				  AR9170_TERMINATOR_NUMBER_INT + \
@@ -283,7 +279,7 @@ static inline __inline struct dma_desc *dma_dequeue_not_bits(struct dma_queue *q
 	     desc = (queue)->head)
 
 #define __for_each_desc_continue(desc, queue)				\
-	for (;desc != (queue)->terminator;				\
+	for (; desc != (queue)->terminator;				\
 	     desc = (desc)->lastAddr->nextAddr)
 
 #define __for_each_desc(desc, queue)					\

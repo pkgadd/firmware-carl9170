@@ -75,6 +75,12 @@ enum carl9170fw_feature_list {
 	/* Firmware supports PSM in the 5GHZ Band */
 	CARL9170FW_FIXED_5GHZ_PSM,
 
+	/* HW (ANI, CCA, MIB) tally counters */
+	CARL9170FW_HW_COUNTERS,
+
+	/* Firmware will pass BA when BARs are queued */
+	CARL9170FW_RX_BA_FILTER,
+
 	/* KEEP LAST */
 	__CARL9170FW_FEATURE_NUM
 };

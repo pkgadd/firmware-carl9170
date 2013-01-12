@@ -30,15 +30,6 @@
 #include "shared/phy.h"
 
 #ifdef CONFIG_CARL9170FW_RADIO_FUNCTIONS
-static void set_channel_start(void)
-{
-	/* Manipulate CCA threshold to stop transmission */
-	set(AR9170_PHY_REG_CCA_THRESHOLD, 0x300);
-	/* Enable Virtual CCA */
-	orl(AR9170_MAC_REG_QOS_PRIORITY_VIRTUAL_CCA,
-	    AR9170_MAC_VIRTUAL_CCA_ALL);
-}
-
 static void set_channel_end(void)
 {
 	/* Manipulate CCA threshold to resume transmission */
@@ -46,11 +37,23 @@ static void set_channel_end(void)
 	/* Disable Virtual CCA */
 	andl(AR9170_MAC_REG_QOS_PRIORITY_VIRTUAL_CCA,
 	     ~AR9170_MAC_VIRTUAL_CCA_ALL);
+
+	fw.phy.state = CARL9170_PHY_ON;
 }
 
 void rf_notify_set_channel(void)
 {
-	set_channel_start();
+	/* Manipulate CCA threshold to stop transmission */
+	set(AR9170_PHY_REG_CCA_THRESHOLD, 0x300);
+	/* Enable Virtual CCA */
+	orl(AR9170_MAC_REG_QOS_PRIORITY_VIRTUAL_CCA,
+	    AR9170_MAC_VIRTUAL_CCA_ALL);
+
+	/* reset CCA stats */
+	fw.tally.active = 0;
+	fw.tally.cca = 0;
+	fw.tally.tx_time = 0;
+	fw.phy.state = CARL9170_PHY_OFF;
 }
 
 /*
@@ -242,7 +245,7 @@ void rf_psm(void)
 		/* Synthesizer off + RX off */
 		bank3 = 0x00400018;
 
-		clock_set(AHB_20_22MHZ, false);
+		fw.phy.state = CARL9170_PHY_OFF;
 	} else {
 		/* advance to the next PSM step */
 		fw.phy.psm.state--;
@@ -259,10 +262,7 @@ void rf_psm(void)
 			/* Synthesizer on + RX on */
 			bank3 = 0x01420098;
 
-			if ((fw.phy.ht_settings & EIGHTY_FLAG) == EIGHTY_FLAG)
-				clock_set(AHB_80_88MHZ, true);
-			else
-				clock_set(AHB_40_44MHZ, true);
+			fw.phy.state = CARL9170_PHY_ON;
 		} else {
 			return ;
 		}

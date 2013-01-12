@@ -65,21 +65,6 @@ config CARL9170FW_RADIO_FUNCTIONS
 
 endmenu
 
-menu "802.11 Firmware Features"
-
-config CARL9170FW_CAB_QUEUE
-	def_bool y
-	prompt "Support software-based Content after Beacon Queue"
-	---help---
-	 This (software) queue is used to send any broad-/multi-cast buffered
-	 frames after the next DTIM beacon.
-
-	 This feature is required for Accesspoint mode operation.
-
-	 Say Y.
-
-endmenu
-
 source "carlfw/usb/Kconfig"
 
 menu "Experimental, Unstable & Testing Extensions"
@@ -198,35 +183,9 @@ config CARL9170FW_UART_CLOCK_40M
 
 endchoice
 
-
-choice
-	prompt "TX / RX Path"
-
-	default CARL9170FW_NORMAL_TX_RX
-
-	config CARL9170FW_NORMAL_TX_RX
-		bool
-		prompt "Normal WLAN TX/RX routines"
-
-	config CARL9170FW_LOOPBACK
-		bool
-		depends on CARL9170FW_BROKEN_FEATURES
-		prompt "TX->(tx feedback)->RX loopback"
-		---help---
-		 Useful carlu testcase.
-
-	config CARL9170FW_DISCARD
-		bool
-		depends on CARL9170FW_BROKEN_FEATURES
-		prompt "TX->(tx feedback)"
-		---help---
-		 Useful carlu testcase
-
-endchoice
-
 config CARL9170FW_UNUSABLE
 	def_bool y
-	depends on CARL9170FW_BROKEN || CARL9170FW_LOOPBACK
+	depends on CARL9170FW_BROKEN || CARL9170FW_DEBUG
 
 config CARL9170FW_USB_MODESWITCH
 	def_bool n

@@ -94,3 +94,7 @@ override_dh_clean:
 		config/cmake_install.cmake \
 		config/zconf.tab.h
 	dh_clean
+
+get-orig-source:
+	chmod +x $(CURDIR)/debian/get-orig-source
+	$(CURDIR)/debian/get-orig-source $(CURDIR)
