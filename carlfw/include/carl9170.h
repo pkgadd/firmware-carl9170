@@ -39,16 +39,13 @@ struct carl9170_bar_ctx {
 	uint8_t ra[6];
 	__le16 start_seq_num;
 	__le16 control;
-	__le32 phy;
 };
 
-#ifdef CONFIG_CARL9170FW_CAB_QUEUE
 enum carl9170_cab_trigger {
 	CARL9170_CAB_TRIGGER_EMPTY	= 0,
 	CARL9170_CAB_TRIGGER_ARMED	= BIT(0),
 	CARL9170_CAB_TRIGGER_DEFER	= BIT(1),
 };
-#endif /* CONFIG_CARL9170FW_CAB_QUEUE */
 
 enum carl9170_ep0_action {
 	CARL9170_EP0_NO_ACTION		= 0,
@@ -67,6 +64,11 @@ enum carl9170_suspend_mode {
 	CARL9170_HOST_AWAKE			= 0,
 	CARL9170_HOST_SUSPENDED,
 	CARL9170_AWAKE_HOST,
+};
+
+enum carl9170_phy_state {
+	CARL9170_PHY_OFF		= 0,
+	CARL9170_PHY_ON
 };
 
 typedef void (*fw_desc_callback_t)(void *, const bool);
@@ -110,20 +112,14 @@ struct firmware_context_struct {
 		/* rx filter */
 		unsigned int rx_filter;
 
-		/* rx statistics */
-		unsigned int rx_total;
-		unsigned int rx_overruns;
-
 		/* tx sequence control counters */
 		unsigned int sequence[CARL9170_INTF_NUM];
 
-#ifdef CONFIG_CARL9170FW_CAB_QUEUE
 		/* CAB */
 		struct dma_queue cab_queue[CARL9170_INTF_NUM];
 		unsigned int cab_queue_len[CARL9170_INTF_NUM];
 		unsigned int cab_flush_time;
 		enum carl9170_cab_trigger cab_flush_trigger[CARL9170_INTF_NUM];
-#endif /* CONFIG_CARL9170FW_CAB_QUEUE */
 
 		/* tx status */
 		unsigned int tx_status_pending,
@@ -140,17 +136,10 @@ struct firmware_context_struct {
 		/* BA(R) Request Handler */
 		struct carl9170_bar_ctx ba_cache[CONFIG_CARL9170FW_BACK_REQS_NUM];
 		unsigned int ba_tail_idx,
-			     ba_head_idx;
+			     ba_head_idx,
+			     queued_ba;
 
-#ifdef CONFIG_CARL9170FW_WOL
-		struct {
-			struct carl9170_wol_cmd cmd;
-			unsigned int last_beacon;
-			unsigned int lost_null;
-			unsigned int last_null;
-			bool wake_up;
-		} wol;
-#endif /* CONFIG_CARL9170FW_WOL */
+		unsigned int queued_bar;
 	} wlan;
 
 	struct {
@@ -196,9 +185,24 @@ struct firmware_context_struct {
 		unsigned int frequency;
 		unsigned int ht_settings;
 
+		enum carl9170_phy_state state;
 		struct carl9170_psm psm;
 #endif /* CONFIG_CARL9170FW_RADIO_FUNCTIONS */
 	} phy;
+
+	unsigned int tally_clock;
+	struct carl9170_tally_rsp tally;
+	unsigned int tx_time;
+
+#ifdef CONFIG_CARL9170FW_WOL
+	struct {
+		struct carl9170_wol_cmd cmd;
+		unsigned int last_beacon;
+		unsigned int lost_null;
+		unsigned int last_null;
+		bool wake_up;
+	} wol;
+#endif /* CONFIG_CARL9170FW_WOL */
 
 #ifdef CONFIG_CARL9170FW_GPIO_INTERRUPT
 	struct carl9170_gpio cached_gpio_state;

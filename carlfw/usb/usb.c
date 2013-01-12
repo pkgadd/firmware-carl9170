@@ -189,7 +189,6 @@ static void usb_reset_eps(void)
 #endif /* CONFIG_CARL9170FW_USB_MODESWITCH */
 
 
-#ifdef CONFIG_CARL9170FW_USB_INIT_FIRMWARE
 static void usb_pta_init(void)
 {
 	unsigned int usb_dma_ctrl = 0;
@@ -251,13 +250,10 @@ static void usb_pta_init(void)
 
 	set(AR9170_USB_REG_DMA_CTL, usb_dma_ctrl);
 }
-#endif /* CONFIG_CARL9170FW_USB_INIT_FIRMWARE */
 
 void usb_init(void)
 {
-#ifdef CONFIG_CARL9170FW_USB_INIT_FIRMWARE
 	usb_pta_init();
-#endif /* CONFIG_CARL9170FW_USB_INIT_FIRMWARE */
 
 	fw.usb.config = 1;
 	/*
@@ -575,7 +571,7 @@ static int usb_get_interface(const struct usb_ctrlrequest *ctrl)
 static int usb_manipulate_feature(const struct usb_ctrlrequest *ctrl, bool __unused clear)
 {
 	unsigned int feature;
-        if (USB_CHECK_REQTYPE(ctrl, USB_RECIP_DEVICE, USB_DIR_OUT))
+	if (USB_CHECK_REQTYPE(ctrl, USB_RECIP_DEVICE, USB_DIR_OUT))
 		return -1;
 
 	if (usb_configured() == false)

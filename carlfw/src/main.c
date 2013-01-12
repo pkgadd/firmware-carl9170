@@ -29,51 +29,10 @@
 #include "printf.h"
 #include "gpio.h"
 #include "wl.h"
+#include "rf.h"
 #include "usb.h"
 
 #define AR9170_WATCH_DOG_TIMER		   0x100
-
-static void timer_init(const unsigned int timer, const unsigned int interval)
-{
-	/* Set timer to periodic mode */
-	orl(AR9170_TIMER_REG_CONTROL, BIT(timer));
-
-	/* Set time interval */
-	set(AR9170_TIMER_REG_TIMER0 + (timer << 2), interval - 1);
-
-	/* Clear timer interrupt flag */
-	orl(AR9170_TIMER_REG_INTERRUPT, BIT(timer));
-}
-
-void clock_set(enum cpu_clock_t clock_, bool on)
-{
-	/*
-	 * Word of Warning!
-	 * This setting does more than just mess with the CPU Clock.
-	 * So watch out, if you need _stable_ timer interrupts.
-	 */
-        if (fw.phy.frequency < 3000000)
-		set(AR9170_PWR_REG_PLL_ADDAC, 0x5163);
-        else
-                set(AR9170_PWR_REG_PLL_ADDAC, 0x5143);
-
-	fw.ticks_per_usec = GET_VAL(AR9170_PWR_PLL_ADDAC_DIV,
-		get(AR9170_PWR_REG_PLL_ADDAC));
-
-	set(AR9170_PWR_REG_CLOCK_SEL, (uint32_t) ((on ? 0x70 : 0x600) | clock_));
-
-	switch (clock_) {
-	case AHB_20_22MHZ:
-		fw.ticks_per_usec >>= 1;
-	case AHB_40MHZ_OSC:
-	case AHB_40_44MHZ:
-		fw.ticks_per_usec >>= 1;
-	case AHB_80_88MHZ:
-		break;
-	}
-
-	timer_init(1, (fw.ticks_per_usec * 25) >> 1);
-}
 
 static void init(void)
 {
@@ -123,48 +82,25 @@ static void handle_fw(void)
 		reboot();
 }
 
-static void timer0_isr(void)
+static void tally_update(void)
 {
-	wlan_timer();
+	unsigned int boff, time, delta;
 
-#ifdef CONFIG_CARL9170FW_GPIO_INTERRUPT
-	gpio_timer();
-#endif /* CONFIG_CARL9170FW_GPIO_INTERRUPT */
+	time = get_clock_counter();
+	if (fw.phy.state == CARL9170_PHY_ON) {
+		delta = (time - fw.tally_clock);
 
-#ifdef CONFIG_CARL9170FW_DEBUG_LED_HEARTBEAT
-	set(AR9170_GPIO_REG_PORT_DATA, get(AR9170_GPIO_REG_PORT_DATA) ^ 1);
-#endif /* CONFIG_CARL9170FW_DEBUG_LED_HEARTBEAT */
-}
+		fw.tally.active += delta;
 
-static void timer1_isr(void)
-{
-}
+		boff = get(AR9170_MAC_REG_BACKOFF_STATUS);
+		if (boff & AR9170_MAC_BACKOFF_TX_PE)
+			fw.tally.tx_time += delta;
+		if (boff & AR9170_MAC_BACKOFF_CCA)
+			fw.tally.cca += delta;
+	}
 
-static void handle_timer(void)
-{
-	uint32_t intr;
-
-	intr = get(AR9170_TIMER_REG_INTERRUPT);
-
-	/* ACK timer interrupt */
-	set(AR9170_TIMER_REG_INTERRUPT, intr);
-
-#define HANDLER(intr, flag, func)			\
-	do {						\
-		if ((intr & flag) != 0) {		\
-			intr &= ~flag;			\
-			func();				\
-		}					\
-	} while (0)
-
-	HANDLER(intr, BIT(0), timer0_isr);
-
-	HANDLER(intr, BIT(1), timer1_isr);
-
-	if (intr)
-		DBG("Unhandled Timer Event %x", (unsigned int) intr);
-
-#undef HANDLER
+	fw.tally_clock = time;
+	fw.counter++;
 }
 
 static void __noreturn main_loop(void)
@@ -185,7 +121,7 @@ static void __noreturn main_loop(void)
 
 		handle_timer();
 
-		fw.counter++;
+		tally_update();
 	}
 }
 
@@ -199,7 +135,7 @@ static void __noreturn main_loop(void)
  * we put _start() there with the linker script carl9170.lds.
  */
 
-void __section(boot) start(void)
+void __section(boot) __noreturn __visible start(void)
 {
 	clock_set(AHB_40MHZ_OSC, true);
 
