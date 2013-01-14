@@ -14,7 +14,7 @@ Files: carlfw/*
 Copyright: 2000-2005, ZyDAS Technology Corporation
            2007-2009, Atheros Communications, Inc.
            2008-2009, Johannes Berg <johannes@sipsolutions.net>
-           2009-2011, Christian Lamparter <chunkeey@googlemail.com>
+           2009-2012, Christian Lamparter <chunkeey@googlemail.com>
 License: GPL-2+
 
 Files: carlfw/src/ashlsi3.S udivsi3_i4i-Os.S
