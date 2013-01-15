@@ -1,6 +1,7 @@
-firmware-carl9170 (1.9.7-0~c0.aptosid.3) UNRELEASED; urgency=low
+firmware-carl9170 (1.9.7-0~c0.aptosid.3) ORPHANED; urgency=low
 
   * NOT RELEASED YET
+  * ORPHANED, obsoleted by firmware-free 3.2.
 
  -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 14 Jan 2013 18:37:34 +0100
 
