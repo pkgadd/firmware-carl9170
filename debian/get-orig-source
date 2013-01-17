@@ -42,12 +42,10 @@ fi
 
 # create new usptream tarball
 cd "${TEMP_SOURCE}" && \
-set -x
 	git archive \
 		--format=tar \
 		--prefix="carl9170fw-${UP_VER}/" \
 		"${UP_VER}" | xz -c6 > "${ORIG_TARBALL}"
-set +x
 if [ "$?" -ne 0 ] || [ ! -e "${ORIG_TARBALL}" ]; then
 	echo "ERROR: failure to create ${ORIG_TARBALL}" >&2
 	rm -rf "${TEMP_SOURCE}"
