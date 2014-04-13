@@ -55,10 +55,10 @@ Build-Depends: debhelper (>= 9.20120115),
  newlib-source,
  binutils-source,
  quilt
-Standards-Version: 3.9.4
+Standards-Version: 3.9.5
 Homepage: http://wireless.kernel.org/en/users/Drivers/carl9170.fw
-Vcs-Svn: svn://svn.berlios.de/fullstory/firmware-carl9170/trunk
-Vcs-Browser: http://svn.berlios.de/wsvn/fullstory/firmware-carl9170/trunk/
+Vcs-git: git://github.com/fullstory/firmware-carl9170.git
+Vcs-Browser: https://github.com/fullstory/firmware-carl9170
 
 Package: firmware-carl9170
 Architecture: all
